@@ -6,15 +6,14 @@ To become a member, request it by emailing me your github username.
 Using ssh-keys with github:
 1 If you don't already have one, generate an ssh-key: `ssh-keygen -t rsa`
 2 Copy the key (e.g. on osx `pbcopy < ~/.ssh/id_rsa.pub`)
-3 On github in web browser, add to SSH-KEYS under "Account Settings"
+3 On github in web browser under "Account Settings"/"SSH keys" make a new key and paste it
 4 To test that it worked: `ssh -T git@github.com`
 
-Clone the repository:
+Clone the repository, i.e. checkout to your local machine:
 1 `git clone git@github.com:JeffersonLab/HPS-NOTES`
 
-Add a new directory:
-1 `cp newlatexdir HPS-NOTES/`
+Add a new directory in HPS-NOTES, update repository:
+1 `cp -r newlatexdir HPS-NOTES/`
 2 `git add HPS-NOTES/newlatexdir`
-3 `git commit -m 'Adding my new HPS-NOTE document source'`
+3 `git commit -m 'descriptive comment'`
 4 `git push`
-
