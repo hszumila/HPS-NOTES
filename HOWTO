@@ -1,0 +1,20 @@
+https://github.com/JeffersonLab/HPS-NOTES
+
+While this repository is publicly readable, to modify it you must be a member of the HPS "team".
+To become a member, request it by emailing me your github username.
+
+Using ssh-keys with github:
+1 If you don't already have one, generate an ssh-key: `ssh-keygen -t rsa`
+2 Copy the key (e.g. on osx `pbcopy < ~/.ssh/id_rsa.pub`)
+3 On github in web browser, add to SSH-KEYS under "Account Settings"
+4 To test that it worked: `ssh -T git@github.com`
+
+Clone the repository:
+1 `git clone git@github.com:JeffersonLab/HPS-NOTES`
+
+Add a new directory:
+1 `cp newlatexdir HPS-NOTES/`
+2 `git add HPS-NOTES/newlatexdir`
+3 `git commit -m 'Adding my new HPS-NOTE document source'`
+4 `git push`
+
