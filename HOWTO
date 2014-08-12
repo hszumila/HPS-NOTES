@@ -12,7 +12,7 @@ Using ssh-keys with github:
 Clone from scratch the HPS-NOTES repository, i.e. checkout to your local machine:
 git clone git@github.com:JeffersonLab/HPS-NOTES
 
-Commit local changes to the repository:
+Commit local changes from your local version to the repository:
 git commit -m 'descriptive comment'
 git push
 
