@@ -1,3 +1,3 @@
 HPS-NOTES
 =========
-Repository for HPS documentation on calibrations, etc.
+Repository for publicly readable HPS documentation source for calibrations, etc.
