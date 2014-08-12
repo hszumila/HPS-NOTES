@@ -4,13 +4,13 @@ While this repository is publicly readable, to modify it you must be a member of
 To become a member, request it by emailing me your github username.
 
 Using ssh-keys with github:
-1 If you don't already have one, generate an ssh-key: `ssh-keygen -t rsa`
-2 Copy the key (e.g. on osx `pbcopy < ~/.ssh/id_rsa.pub`)
-3 On github in web browser under "Account Settings"/"SSH keys" make a new key and paste it
-4 To test that it worked: `ssh -T git@github.com`
+0 If you don't already have one, generate an ssh-key: `ssh-keygen -t rsa`
+1 Copy the key (e.g. on osx `pbcopy < ~/.ssh/id_rsa.pub`)
+2 On github in web browser under "Account Settings"/"SSH keys" make a new key and paste it
+3 To test that it worked: `ssh -T git@github.com`
 
 Clone from scratch the HPS-NOTES repository, i.e. checkout to your local machine:
-1 `git clone git@github.com:JeffersonLab/HPS-NOTES`
+0 `git clone git@github.com:JeffersonLab/HPS-NOTES`
 
 Add a new directory in HPS-NOTES, and update the repository:
 0 `cd HPS-NOTES`
