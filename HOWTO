@@ -10,15 +10,14 @@ Using ssh-keys with github:
 3 To test that it worked: `ssh -T git@github.com`
 
 Clone from scratch the HPS-NOTES repository, i.e. checkout to your local machine:
-0 `git clone git@github.com:JeffersonLab/HPS-NOTES`
+git clone git@github.com:JeffersonLab/HPS-NOTES
 
-Add a new directory in HPS-NOTES, and update the repository:
-0 `cd HPS-NOTES`
-1 `cp -r path/to/newlatexdir .`
-2 `git add ./newlatexdir`
-3 `git commit -m 'descriptive comment'`
-4 `git push`
+Commit local changes to the repository:
+git commit -m 'descriptive comment'
+git push
+
+If you made a new file or directory, must "add" it first before commiting:
+git add newfileORdir
 
 Update your local version to reflect the current status of the repository:
-0 `cd HPS-NOTES`
-1 `git pull`
+git pull
