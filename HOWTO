@@ -3,21 +3,27 @@ https://github.com/JeffersonLab/HPS-NOTES
 While this repository is publicly readable, to modify it you must be a member of the HPS "team".
 To become a member, request it by emailing me your github username.
 
+
+
 Using ssh-keys with github:
 0 If you don't already have one, generate an ssh-key: `ssh-keygen -t rsa`
 1 Copy the key (e.g. on osx `pbcopy < ~/.ssh/id_rsa.pub`)
 2 On github in web browser under "Account Settings"/"SSH keys" make a new key and paste it
 3 To test that it worked: `ssh -T git@github.com`
 
+
+
 Clone from scratch the HPS-NOTES repository, i.e. checkout to your local machine:
 git clone git@github.com:JeffersonLab/HPS-NOTES
+
+The following must be done inside HPS-NOTES directory:
 
 Commit local changes from your local version to the repository:
 git commit -m 'descriptive comment'
 git push
 
 If you made a new file or directory, must "add" it first before commiting:
-git add newfileORdir
+git add path/to/newfileORdir
 
 Update your local version to reflect the current status of the repository:
 git pull
