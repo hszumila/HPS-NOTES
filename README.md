@@ -1,5 +1,5 @@
 HPS-NOTES
 =========
-Repository for publicly readable HPS documentation source for calibrations, etc.
+Repository for publicly readable Heavy Photon Search documentation source for calibrations, etc.
 
 Write access is restricted.
