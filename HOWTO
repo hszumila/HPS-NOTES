@@ -9,12 +9,15 @@ Using ssh-keys with github:
 3 On github in web browser under "Account Settings"/"SSH keys" make a new key and paste it
 4 To test that it worked: `ssh -T git@github.com`
 
-Clone the HPS-NOTES repository, i.e. checkout to your local machine:
+Clone from scratch the HPS-NOTES repository, i.e. checkout to your local machine:
 1 `git clone git@github.com:JeffersonLab/HPS-NOTES`
 
-Add a new directory in HPS-NOTES, update repository:
+Add a new directory in HPS-NOTES, and update the repository:
 0 `cd HPS-NOTES`
 1 `cp -r path/to/newlatexdir .`
 2 `git add ./newlatexdir`
 3 `git commit -m 'descriptive comment'`
 4 `git push`
+
+Update your local version to reflect the current status of the repository:
+0 `git pull`
