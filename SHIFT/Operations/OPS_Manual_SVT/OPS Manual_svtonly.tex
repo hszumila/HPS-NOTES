@@ -1,0 +1,511 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{subfigure}
+%\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
+%\geometry{letterpaper} % or letter or a5paper or ... etc
+% \geometry{landscape} % rotated page geometry
+
+% See the ``Article customise'' template for come common customisations
+
+\title{HPS SVT Operations Manual \\ v0.2}
+\author{Per Hansson, John Jaros, Takashi Maruyama, \\ Tim Nelson\footnote{contact person for this document}, Marco Oriunno, Sho Uemura}
+\date{October 19, 2014} % delete this line to display the current date
+
+%%% BEGIN DOCUMENT
+\begin{document}
+
+\maketitle
+
+\section{System Description}
+
+The SVT, shown in Figure~\ref{fig:SVT}, uses 6 layers of silicon extending from 10 cm to 90 cm downstream of the target inside of the PS vacuum chamber to measure charged particle trajectories.  
+%=======================
+\begin{figure}[htbp]
+\begin{center}
+    \includegraphics[width=7cm]{SVT}\includegraphics[width=7cm]{SVT_top}
+\caption{The SVT shown inside of the pair spectrometer vacuum chamber.  The beam enters through the flange in the front of the vacuum box extension that houses services for the SVT. }
+\label{fig:SVT}
+\end{center}
+\vspace*{-5mm}
+\end{figure}
+%=======================
+To accommodate the passage of the beam, the SVT is built in two halves, top and bottom, so that each layer consists of a pair of modules, one above and one below the beam plane.  Each module uses silicon microstrip sensors placed back-to-back with a small stereo angle between sides to provide 3-d space points for the hits in a module.  Modules for layer 1-3 have a single sensor on each side with readout at one end, while those for layers 4-6 are longer, with a pair of sensors on each side and readout at both ends.
+
+Modules are supported in groups of three by a set of four support plates, as shown in Figure~\ref{fig:L1-3_bottom}. The top and bottom support plates for the back half of the SVT (layers 4-6) are stationary.  However, the supports for layers 1-3 can be opened and closed vertically around the beam, rotating around hinges behind layer 3 and moved by levers extending upstream to a pair of linear shifts outside of the magnet. The support plates are kinematically mounted inside a support box that installs into the pair spectrometer (PS) vacuum chamber, shown in Figure~\ref{fig:SVT_Box}.
+%=======================
+\begin{figure}[htpb]
+\subfigure[\label{fig:L1-3_bottom}The lower support plate for Layers 1-3, showing the silicon (red) and readout electronics (green) of the modules, as well as the motion lever for opening and closing the SVT and the SVT beam scan wires.]
+{\includegraphics[width=6.5cm]{L1-3_bottom}}
+\hspace{0.5cm}
+\subfigure[\label{fig:SVT_Box}The SVT support box which contains the upper and lower support plates for Layers 1-3 and Layers 4-6, as well as the cooling plate housing the Front End Boards of the SVT DAQ.]
+{\includegraphics[width=6.5cm]{SVT_Box}}
+\caption{Key sub-assemblies of the SVT.}
+\end{figure}
+%=======================
+
+The first stage of readout electronics is located on a hybrid circuit board at the end of each sensor.  Multiplexed analog signals from these boards are digitized by a set of 10 Front End Boards (FEBs) mounted to a separate cooling plate inside the SVT support box. Each FEB can control 4 hybrid/sensor units: a single module in layers 4-6 and either one or two modules in layers 1-3. The FEBs also control the hybrids, provide regulated low-voltage power from a single input, and pass externally generated bias voltages (HV) through to the sensors.   The FEBs communicate with a set of 4 Signal Flange Boards (SFB), up to three per SFB, which transmit digital signals through the vacuum penetration.  The exterior side of each flange board converts digital to optical signals for communication with the RCE DAQ.  Power to the FEB are routed through a pair of Power Flange Boards, one for LV and one for HV, supplied by a Wiener Mpod power supply modules in a crate on the pie-tower.
+
+Cooling for the SVT is provided by a pair of chillers; one for the hybrids and sensors that operates at -10 $^\circ$C and one for the FEBs that operates at room temperature.  The FEBs have a single cooling loop, while the hybrids and sensors have two loops, one for the top and one for the bottom half of the SVT, where each of these loops runs first through the support structure for layers 1-3 and then through the structure for layers 4-6.  There are temperature sensors on every hybrid as well as sensors in the FEBs. The linear shifts, the cooling penetrations, and the signal/power penetrations are all located on a set of flanges on an extension vacuum box mounted to the upstream end of the PS vacuum chamber and which connects to the upstream beam line.
+
+Since the SVT sensors are close to the beam, some attention to beam conditions is required prior to turning the SVT on and taking data. A number of systems provide the information used to assess whether beam conditions allow SVT operation. These systems include beam position monitors along the beamline, wire scanners located upstream of the HPS chicane, the wire attached to the SVT itself, a protection collimator located just upstream of the HPS chicane, and beam halo counters located along the beamline downstream of the collimator and signals from the HPS ECal which serve together as beam background monitors.  A detailed description of these systems and their operation can be found in the Beamline Operations Manual.
+
+\section{SVT Power Supplies}
+\label{sec:svtps}
+\subsection{System Description}
+The power needed to operate the SVT is supplied by five MPOD MPV8008I low voltage power supply modules inside a 10-slot Wiener EC crate, see Fig.~\ref{fig:ec_crate}. 
+\begin{figure}
+\begin{center}
+\includegraphics[width=10cm]{ec_create.png}
+\caption{\label{fig:ec_crate}The Wiener power supply crate for the SVT.}
+\end{center}
+\end{figure}
+The crate is located in a rack in the pie tower with PTFE (teflon) insulated twisted pair copper wires used to bring power to the SVT in the Hall-B alcove. Each of the five modules supplies power to two FEBs. 
+
+In addition to the low voltage power for the SVT, the crate also houses three ISEG EHS F201p\_805F high precision high voltage modules that provide the reverse bias voltage to the silicon sensors of the SVT. The 
+three modules each supply bias to SVT L1-3, L4-6 top or L4-6 bottom.  
+
+\subsection{Control}
+\label{sec:svt_power_control}
+The SVT power supply and bias is fully controlled through GUIs to the EPICS control system. EPICS controls the EC crate directly through its SNMP interface which supply the FEBs with power. The FEBs regulate and distribute power down to the hybrid boards of the SVT sensor modules. The control and monitoring of the hybrid power (and temperature) is handled by an EPICS IOC running on the SVT DAQ crate. It is important to note that having cooling running is a prerequisite for any power being supplied to the SVT and configuration of the FEB are prerequisite for powering any hybrids.
+
+
+
+
+\subsubsection{Turning the SVT power and bias ON}
+
+
+To power ON all of the SVT follow this procedure:
+\begin{enumerate}
+\item Turn on SVT Flange Power
+\begin{enumerate}
+\item
+Find the SVT Flange Power Control GUI, see Fig.~\ref{fig:svt_Flange}  (see~\ref{sec:monitoring_power} to restart if not running).
+\item
+Press the {\sc LV ON/OFF} next to each of the channels.
+\item
+Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+\item
+Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
+\end{enumerate}
+
+\item Turn on SVT FEB Power
+\begin{enumerate}
+\item 
+Make sure that the cooling for theFEBs is {\sc ON} and {\sc OK}. See Sec.~\ref{sec:svt_cooling} for operation of the cooling system.
+\item
+Find the SVT FEB Power Control GUI shown in Fig.~\ref{fig:svt_FrontEnd} (see~\ref{sec:monitoring_power} to restart if not running)
+\item
+Press {\sc LV ON/OFF} for each of the three voltages of the ten FEB 
+\item
+Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+\item
+Currents and temperature should start to update on the power and temperature GUI for the FEBs at this point. Check that values are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
+\end{enumerate}
+
+\item Turn on SVT Hybrid Power
+\begin{enumerate}
+\item 
+Make sure that the cooling for the SVT hybrids is {\sc ON} and {\sc OK}. See Sec.~\ref{sec:svt_cooling} for operation of the cooling system.
+\item
+Go to the DAQ GUI and do a {\sc download} with the normal HPS configuration. This configures the SVT FEB which allows the powering of the hybrids. Use the DAQ operations manual if needed. 
+\item 
+Find the SVT Main Status Control GUI in Fig.~\ref{fig:svt_Status_Main} (see~\ref{sec:monitoring_power} to restart if not running).
+\item
+Press {\sc SVT TOP ALL ON} to turn on power to the top half of the SVT.
+\item
+Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+\item
+Press {\sc SVT BOT ALL ON} to turn on power to the top half of the SVT.
+\item
+Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+\item
+Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
+\end{enumerate}
+
+\item Turn on SVT High Voltage Bias
+\begin{enumerate}
+\item
+Find the SVT High Voltage Bias Control GUI shown in Fig.~\ref{fig:svt_BIAS} (see~\ref{sec:monitoring_power} to restart if not running).
+\item
+Check that the set point in the {\sc SVT BIAS ALL V\_SET} is set to 180V. If not call the SVT expert.
+\item
+Press {\sc SVT BIAS ALL ON/OFF}
+\item
+Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+\end{enumerate}
+\end{enumerate}
+
+\subsection{Monitoring, Alarms and Interlocks}
+
+\subsubsection{Power and high voltage bias monitoring}
+\label{sec:monitoring_power}
+The SVT power and bias as well as alarms are monitored with five principle GUI's. To bring up the GUIs follow these procedures (see slow control manual for more information):
+
+\begin{enumerate}
+\item Log into the {\sc clon01} computer in the counting house.  
+\item Open a terminal and issue {\sc hps\_epics} command to open the main HPS GUI.
+\item Each of the individual GUIs can be opened by clicking the appropriate button in the HPS main GUI that opened.
+\end{enumerate}
+
+
+Below is a description of each of the GUI's.
+\begin{itemize}
+\item {\bf Main status GUI} in Fig.~\ref{fig:svt_Status_Main}.
+\begin{itemize}
+\item Monitoring: all measured currents from hybrids. 
+\item Control: ON/OFF switch for top and bottom half separately as well as individual hybrids.
+\item Links: {\sc BIAS}, {\sc FE Low Voltages} and {\sc Flange Boards} buttons open up the GUI for these objects (see below). There is also links to the  individual hybrid power control and monitoring GUI discussed below (EXPERT only).
+\end{itemize}
+
+\item {\bf Hybrid GUI} in Fig.~\ref{fig:svt_HybridLV} (EXPERT ONLY).
+\begin{itemize}
+\item Monitoring: Interlock status for hybrid power.
+\item Monitoring: all measured voltage and currents from hybrids. 
+\item Control: ON/OFF switch for each of the three voltages for individual hybrids.
+\item Control: set point for the three voltages for individual hybrids.
+\end{itemize}
+
+
+\item {\bf Flange Board GUI} in Fig.~\ref{fig:svt_Flange}.
+\begin{itemize}
+\item Monitoring: Interlock status for flange board power.
+\item Monitoring: all  currents to the flange boards. 
+\item Control: ON/OFF switch for each flange board. 
+\item Control: Set point for voltage, trip and ramp values for each flange board (EXPERT ONLY).
+\end{itemize}
+
+\item {\bf FEB GUI} in Fig.~\ref{fig:svt_FrontEnd}.
+\begin{itemize}
+\item Monitoring: Interlock status for FEB power.
+\item Monitoring: all currents and voltages of the FEB.
+\item Control: ON/OFF switch for each FEB board. 
+\item Control: Set point for voltage, trip and ramp values for each flange board (EXPERT ONLY).
+\end{itemize}
+
+
+\item {\bf High voltage bias GUI} in Fig.~\ref{fig:svt_BIAS}.
+\begin{itemize}
+\item Monitoring: Interlock status for HV bias.
+\item Monitoring: all voltage set points for the SVT modules.
+\item Control: ON/OFF switch for all modules, each half and each module.  
+\item Control: Set point for voltage for all modules (EXPERT ONLY).
+\item Control: Set point for voltage and ramp values for each module (EXPERT ONLY).
+\end{itemize}
+
+
+\end{itemize}
+
+\begin{figure}
+\includegraphics[width=12cm]{svt_Flange.png}
+\caption{SVT Flange board power GUI.\label{fig:svt_Flange}}
+\end{figure}
+\begin{figure}
+\includegraphics[width=12cm]{svt_FrontEnd.png}
+\caption{SVT Front End Board power GUI.\label{fig:svt_FrontEnd}}
+\end{figure}
+\begin{figure}
+\includegraphics[width=12cm]{svt_Status_Main.png}
+\caption{SVT main status GUI.\label{fig:svt_Status_Main}}
+\end{figure}
+\begin{figure}
+\includegraphics[width=12cm]{svt_HybridLV.png}
+\caption{SVT hybrid GUI.\label{fig:svt_HybridLV}}
+\end{figure}
+\begin{figure}
+\includegraphics[width=12cm]{svt_BIAS.png}
+\caption{SVT high voltage bias GUI.\label{fig:svt_BIAS}}
+\end{figure}
+
+
+\subsubsection{Alarms}
+The alarm handling is handled by the ALH extension to EPICS that is widely used at JLab. The SVT alarm handling GUI is shown in Fig.~\ref{fig:svt_alarm_gui}. It is tree-based with each level showing more detailed info of what alarm has gone off. 
+\begin{figure}
+\includegraphics[width=12cm]{svt_alarm_gui}
+\caption{SVT alarm handler GUI.\label{fig:svt_alarm_gui}}
+\end{figure}
+The top level branches are:
+\begin{itemize}
+
+\item {\bf bias:} High voltage bias
+\begin{itemize}
+\item Condition: voltage read-back range
+\end{itemize}
+\item {\bf lv} 
+\begin{itemize}
+\item {\bf hybrid:} Hybrid power
+\begin{itemize}
+\item Condition: voltage read-back range
+\item Condition: voltage measured range
+\item Condition: current range
+\end{itemize}
+
+\item {\bf fe:} Front end power
+\begin{itemize}
+\item Condition: voltage read-back range
+\item Condition: voltage measured range
+\item Condition: current range
+\end{itemize}
+\item {\bf flange:} Flange power
+\begin{itemize}
+\item Condition: voltage read-back range
+\item Condition: current range
+\end{itemize}
+\end{itemize}
+\item {\bf temp}
+\begin{itemize}
+\item {\bf hybrid:} Hybrid temperature
+\begin{itemize}
+\item Condition: temperature range
+\end{itemize}
+\item {\bf fe:} Front end board temperature
+\begin{itemize}
+\item Condition: temperature range
+\end{itemize}
+\item {\bf cool\_svt:} SVT cooling loop temperature
+\begin{itemize}
+\item Condition: temperature range
+\end{itemize}
+\item {\bf cool\_fe:} Front end board cooling loop temperature
+\begin{itemize}
+\item Condition: temperature range
+\end{itemize}
+\end{itemize}
+\end{itemize}
+Each level has two buttons: a {\sc guidance} button which opens a pop up display with more information and an {\sc action} button which acknowledges the alarm. 
+
+\begin{verbatim}
+In case any error please contact SVT expert.
+\end{verbatim}
+\begin{verbatim}
+Be ready to report what alarm has gone off.
+\end{verbatim}
+
+More information about the alarm hander can be found in the slow control manual. 
+
+\subsubsection{Interlocks}
+\label{sec:svt_power_monitoring_alarm_interlocks}
+
+To safely operate the SVT, the power supplies are included in an interlock system that triggers a fast shutdown of the power supply crate based on a set of conditions. A schematic view of the interlock system that triggers a SVT power supply interlock signal is shown in Fig.~\ref{fig:svt_interlock_diagram}. 
+\begin{figure}
+\includegraphics[width=10cm]{svt_interlock_diagram}
+\caption{Diagram of the SVT interlocks.\label{fig:svt_interlock_diagram}}
+\end{figure}
+The interlock system is based on an Allen-Bradley PLC that receives input signals and performs the necessary logic to issue an interlock signal. The interlock signal that triggers a fast shutdown of the SVT power supplies are:
+\begin{itemize}
+\item Hybrid and front end board temperature
+\item Input and output coolant temperature of the SVT hybrid and front end board cooling loops.
+\item Coolant fluid pressure in the SVT hybrid and front end board cooling loops.
+\item Chiller setting and status of the SVT and hybrid and front end board chillers.
+\item Signal from the fast shutdown system of the accelerator. 
+\end{itemize}
+ Each power control interface (flange board, front-end board, hybrid, bias) shows the status of the interlock signal that allows each system to be powered. 
+
+In case an the interlock system issues an interlock signal it triggers a fast shutdown of the affected supplies or the entire crate using the {\sc FAST\_SHUTDOWN} feature of the MPOD controller in the crate. Power will shut down ignoring any ramp-down parameters. To recover  the power supplies from an interlock signal:
+\begin{enumerate}
+\item Find out which input triggered the interlock signal.
+\item See if the problem can be understood and corrected easily. Otherwise call the SVT expert.
+\item If possible, mitigate and reset the interlock signal and the power can be restored as described above in Sec.~\ref{sec:svt_power_control}.
+\end{enumerate}
+
+
+\section{SVT Cooling}
+\subsection{System Description}
+The SVT cooling system, summarized in Table~\ref{tab:cooling} and Figure~\ref{fig:cooling_diagram}, controls the temperature of the sensors removes heat dissipated by the electronics. 
+%===================
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{lccc}   
+\hline \hline 
+    Location & Set Point & Resistive Load & Radiative Load \\      
+\hline
+Sensor Modules & -20 $^\circ$C & 75 W & 10 W  \\
+Piping, module chiller & -30 $^\circ$C & 100 W & 0 \\
+Set point, module chiller 1 & -30 $^\circ$C & - & - \\
+Front End Boards & 30 $^\circ$C & 100 W & 0  \\
+Set point, FEB chiller & 20 $^\circ$C & - & - \\
+ \hline \hline
+\end{tabular}
+\caption[]{SVT cooling design parameters.}
+\label{tab:cooling} 
+\end{center}
+\end{table}
+%===================
+%=======================
+\begin{figure}[htbp]
+\begin{center}
+    \includegraphics[width=\textwidth]{cooling_diagram}
+\caption{The SVT cooling system.}
+\label{fig:cooling_diagram}
+\end{center}
+\end{figure}
+%=======================
+Since the SVT is in vacuum, the cooling system is key for the safety and performance of the detector. The main heat sources are the sensor modules and their hybrid circuit boards and the Front End Boards (FEBs) which distribute power and DAQ to reduce the number of wires that must penetrate the vacuum flanges. An additional heat load results from the radiative heat exchange between the SVT U-support and the detector vacuum. The sensor modules need to be controlled to a sub-zero temperature, while the FEBs needs to be only thermally managed, removing the heat dissipated and keeping the active components to safe temperature, slightly above room temperature. For this reason it has been decided to have two separate chillers with independent loops and controls. The dew point in Hall B is expected to be at ~18 $^\circ$C. The cold line from the sensor chiller to the vacuum box will be insulated with 1Ó thick, non-flammable Armaflex.
+
+The cooling loop for the sensor modules is connected to a Julabo Chiller, Model Presto A80, which will be set at -30 $^\circ$C. The heat transfer fluid is HFE-7000, a Fluorinert engineered fluid long used as heat transfer media for cooling applications. A bypass valve is placed at the chiller to manually adjust the mass flow. The inlet and the outlet lines pass through flanges on the detector vacuum box, where they are split after the feed trough to provide cooling in series to the top and the bottom parts of the detector. The cooling pipes in vacuum are flexible metal hoses from the vacuum feed through to the detector, while the cooling lines built in the detector are 0.25" rigid copper pipe. The flexible lines are brazed on one end to the rigid copper pipes of the detectors and connected with Swagelok fittings to the vacuum feedthroughs on the other end. The cooling feed through have a ceramic transition spool to insulate electrically the cooling line from the vacuum box. Dielectric fittings to break the electrical continuity of the cooling loop are placed outside the vacuum.  The drain ports are placed in proximity of the cooling feedthroughs together with two release valves, on the main supply and the main return line.
+In addition to the filter of the chiller, a second filter is located on the main supply line. A check valve is at the end of the main return line, just before the bypass. The estimated operating mass flow of the system without bypass is ~ 10 g/s, providing 5 g/s per cooling channel with a pressure drop ~1 bar.  The cooling loop inside vacuum is pneumatically tested up to 20 bars without showing any sign of failure.
+
+\subsection{Control and Operations} \label{sec:svt_cooling}
+
+All the instrumentation to control the cooling system will be placed in air, close to the chillers, with an identical layout for the two, as shown in Figures~\ref{fig:cooling_diagram} and~\ref{fig:cooling_manifold} . 
+%=======================
+\begin{figure}[htbp]
+\begin{center}
+    \includegraphics[width=\textwidth]{cooling_manifold}
+\caption{The instrumented SVT cooling manifold.}
+\label{fig:cooling_manifold}
+\end{center}
+\end{figure}
+%=======================
+One mechanical pressure dial gauge is located after the bypass, on the main supply line. Two Pt100 temperature sensors are located at the inlet and the outlet of the chiller. A paddlewheel flow meter located after the bypass provide the value of the flow going to the detector. A solenoid valve after the flow meter is stopping the cooling flow when requested by the slow control system, like in case of leaks. The temperature sensors and the flow meter are interfaced with the Slow Control as diagnostic, while the solenoid valve is interlocked. Additional diagnostic is available through the temperature sensors built-in the SVT modules and the functional parameters of the chillers like set point pump pressure, mass flow which are controlled through an RS232 software interface.
+
+\textbf{EXPERTS ONLY: }The startup procedure is as follows.
+When the SVT detector is under vacuum, the cooling must be switched on before the detector is powered, while the cooling is only recommended if the detector is in air. This condition is logically interlocked in the Slow Control. At the beginning the chiller is switched on and the by-pass valve is adjusted to get sufficient cooling flow, ~10 g/s. Once the flow is stable and the temperature of the Silicon sensors is close to the chiller set point, the Power Supplies can be switched on. 
+
+\textbf{EXPERTS ONLY: }The procedure for draining the system is as follows
+To drain the system in case of an access required for maintenance, all the detector must be powered off, the solenoid valve closed and the chiller powered off. The ball valves on the supply and return line must be closed and the drain can be done through the Tee fittings by means of a clean compressed gas (air or nitrogen)
+
+\begin{verbatim}Two kinds of potential accidents have been considered with the 
+corresponding mitigation actions. In the event of any leak, 
+contact the expert immediately.
+\end{verbatim}
+
+\textbf{Cooling Leakage inside vacuum:} \\ The two fittings between the flexible hose and the vacuum feedthroughs are the only locations where potential leaks may occur. In this case; the vacuum gauge, the temperatures sensors on the detectors, and the flow meter provide interlock signals which disable operation of the SVT. The power supplies are powered off, the flow is stopped by the solenoid valve, while the chiller pump will empty the cooling loop. The beam must be stopped.
+
+\textbf{Cooling leakage outside vacuum:} \\ More fittings are potentially susceptible, although the consequences are less severe. The same interlocks apply as in the previous case, with the exception of loss of vacuum that stops the beam. The list of actions is the same but the beam does not need to be stopped.
+
+\subsection{Monitoring, Alarms and Interlocks}
+As described above, the following parameters are monitored through the EPICS slow controls system:
+
+\begin{itemize}
+	\item Flow, inlet temperature, and outlet temperature for both cooling loops (read through Allen-Bradley PLC)
+	\item On-board temperatures for SVT modules and front end boards (read through SVT DAQ)
+	\item Chiller status and setpoints (read through RS-232 interfaces of chillers)
+\end{itemize}
+
+These are displayed on a monitoring GUI (Figure \ref{fig:cooling_display}). The SVT alarm handler has alarms defined for the temperatures: see the SVT monitoring section.
+
+The solenoid valves are interlocked to mitigate any leaks in the cooling system. 
+If the flow meter in either cooling loop detects low flow, the valve at that chiller's outlet closes to prevent coolant from being pumped out of a possible leak in that loop. 
+If the vacuum gauge detects a loss of vacuum, both solenoid valves close in case the vacuum loss is due to a coolant leak inside vacuum.
+
+Other systems use the cooling system's flow and temperature sensors as inputs to their interlocks; see the Slow Control Operations Manual.
+
+\begin{figure*}[t]
+	\begin{center}
+		\includegraphics[width=0.8\textwidth]{Epics_svt_temps}
+		\caption{SVT temperature GUI from 2012 test run. An updated GUI (work in progress) will show flow and temperature readings from the cooling loop, and chiller status.}
+		\label{fig:cooling_display}
+	\end{center}
+\end{figure*}
+
+
+\section{SVT Motion System}
+\label{sec:svtmotion}
+
+\subsection{System Description}
+
+Figure~\ref{fig:motion} shows the SVT Motion System schematically. The top/bottom of each SVT support plate has three sensor layers (L1, L2, L3) and a wire frame, supported on a bearing at one end and connected to a rod attached to a linear stage at the other end. The linear stage is moved by a stepper motor through the EPICS slow controls system. In the nominal run position, the support plates are parallel to the beam and the Silicon physical edge is at 0.5 (L1), 2.0 (L2), and 3.5 mm (L3) from the beam. The support plates can be retracted by 1.3 degrees. Figure~\ref{fig:beam} shows the beam's eye view of the wires and the L1 sensor edge in the nominal run position and in the fully retracted position.
+
+The stepper motor controller is Newport XPS controller, and is different from the stepper motor controllers found in Hall B. The motor control is based on an optical encoder. Stage movement is precisely calibrated, and re-calibration is not necessary. Since the encoder has no knowlege of the actual stage position when the controller power is turned on, the linear stage must move to a reference point to establish its calibration (called ``homing''). A switch is located at the fully retracted position for this purpose. 
+
+Three vertical coordinates are used to locate the stage, the horizontal wire and the layer 1 sensor physical edge. The stage coordinate is y(stage) = 0 mm at the fully retracted position and y(stage) = 18.89 mm at the nominal run position for both top and bottom stages. The wire and sensor edge coordinates are measured relative to the nominal beam position (positive y is up), and are given in terms of y(stage) as,
+
+\begin{itemize}
+\item
+y(top-wire) = -0.482 $\cdot$ y(stage) + 1.76 mm,
+\item
+y(top-si) = -0.391 $\cdot$ y(stage) + 7.89 mm,
+\item
+y(bottom-wire) = +0.463 $\cdot$ y(stage) - 1.39 mm,
+\item
+y(bottom-si) = +0.372 $\cdot$ y(stage) - 7.53 mm.
+\end{itemize}
+
+As the coordinate transformation is done automatically, all you need to specify is the position of the wire or Si sensor edge to operate the SVT Mover and the SVT Wire Scanner. 
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=15cm]{motion.eps}
+\caption{SVT Motion System}
+\label{fig:motion}
+\end{figure}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=15cm]{WireFrame2.eps}
+\caption{Beam's eye view of wires and and L1 sensor edge}
+\label{fig:beam}
+\end{figure}
+
+\subsection{SVT Mover Operations}
+
+Figure \ref{mover} shows the SVT Mover GUI.
+
+\begin{itemize}
+\item
+Hit ``HOME'' button for Homing and confirm ``Homing Done'' in Status. It may take up to 3 minutes.
+\item
+Type in the destination of the layer 1 edge in mm in ``MOVE LAYER-1 TO'', and hit ``MOVE'' button.
+\item
+Type in a relative move value in mm in ``JOG LAYER-1 BY'', and hit either up or down triangle.
+\item
+Hit ``STOP'' to abort.
+\end{itemize}
+
+The positions of the stage, wire and Layer 1 sensor edge will be shown in ``SVT Position:'' in their respective coordinate.  Moving the SVT away from the home position is interlocked by beam conditions, shown by the interlock status light in the GUI.  Lack of safe interlock status will prevent motion of the SVT from the home position and loss of interlock will cause the SVT to return to home automatically.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=10cm]{mover.eps}
+\caption{SVT Mover}
+\label{mover}
+\end{figure}
+
+\subsection{SVT Wire Scanner Operations}
+
+When the beam is first delivered to Hall B, the vertical position of the beam is known to about 1 mm. Since we want to place the SVT layer 1 physical edge at 0.5 mm from the beam, SVT Wire Scanner is used to measure the beam position relative to the sensor edge with a precision of about 50~$\mu$m. The wire scanner has a 20 $\mu$m diameter gold-plated tungsten horizontal wire and a 30 $\mu$m diameter gold-plated tungsten angled wire. The angled wire is at 8.904 degrees to the horizontal wire, and is separeted by y=1.98 mm at the nominal beam position. The Y position of the beam can be measured directly from the horizontal wire. If $\Delta$Y is the apparent Y position difference of the measured beam ``gaussian'' centers, the X position of the beam can be obtained from X = ($\Delta$Y - 1.98)/tan(8.904).      
+
+Wire scan should be repeated using the top wire and the bottom wire to check consistency. Once the beam offset values ($\Delta$X, $\Delta$Y) from the nominal beam position are measured, request MCC to move the beam using corrector magnets (MBC2H04V/H and MBC2H08V/H). Wire scan should be repeated to confirm the beam position.  As with any motion of the SVT, the ability to perform a wire scan may be interlocked by beam conditions, as shown by the interlock status light in the GUI.
+
+\vskip 0.2 in
+
+\noindent
+{\bf Setup}
+
+\begin{itemize}
+\item
+MCC is not moving the beam or changing beam conditions.
+\item
+Ask MCC to mask BOM and Downstream Halo Counter in FSD.
+\item
+SVT power is turned off.
+\item
+ECal is operational.
+\item
+Downstream Halo Counter is operational.
+\end{itemize}
+
+\noindent
+{\bf Scan}
+
+A wire scan can be performed from the SVT Wire Scan GUI (Figure \ref{scannergui}).
+
+\begin{itemize}
+\item 
+Choose either TOP Wire or BOTTOM Wire.
+\item
+Choose either ECal or Halo Counter as the detector.
+\item
+Click ``START'' using the default values for Scan Range.
+\item
+When the status shows ``Done'', click ``Analyze'' button.
+\end{itemize}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=10cm]{WireScannerGUI.eps}
+\caption{SVT Wire Scanner GUI}
+\label{scannergui}
+\end{figure}
+
+\end{document}
