@@ -19,11 +19,9 @@ git clone git@github.com:JeffersonLab/HPS-NOTES
 The following must be done inside HPS-NOTES directory:
 
 Commit local changes from your local version to the repository:
+git add Path/To/UpdatedFileOrDir
 git commit -m 'descriptive comment'
 git push
-
-If you made a new file or directory, must "add" it first before commiting:
-git add path/to/newfileORdir
 
 Update your local version to reflect the current status of the repository:
 git pull
