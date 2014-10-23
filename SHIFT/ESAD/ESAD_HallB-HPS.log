@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2010.7.21)  25 JUN 2014 07:56
+This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2010.7.21)  22 OCT 2014 15:44
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -624,16 +624,36 @@ File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 193.
  [9]
-Overfull \hbox (26.0628pt too wide) in paragraph at lines 219--227
+Overfull \hbox (21.68282pt too wide) in paragraph at lines 219--227
  [][] 
  []
 
-[10] [11]
-Overfull \hbox (15.5686pt too wide) in paragraph at lines 298--305
+[10]
+Overfull \hbox (38.68596pt too wide) in paragraph at lines 254--260
  [][] 
  []
 
-[12] [13] [14] [15] [16] [17]
+[11]
+Overfull \hbox (90.42415pt too wide) in paragraph at lines 298--305
+ [][] 
+ []
+
+[12]
+Overfull \hbox (34.42761pt too wide) in paragraph at lines 336--342
+ [][] 
+ []
+
+[13] [14]
+Overfull \hbox (40.90567pt too wide) in paragraph at lines 383--391
+ [][] 
+ []
+
+[15] [16]
+Overfull \hbox (20.49664pt too wide) in paragraph at lines 456--463
+ [][] 
+ []
+
+[17]
 Underfull \hbox (badness 7504) in paragraph at lines 468--469
 []\OT1/cmr/m/n/10.95 EPICS Doc-u-men-ta-tion. URL: http://www.epics.org/. See a
 lso
@@ -683,10 +703,10 @@ ocal/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/loca
 l/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local
 /texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/t
 exlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on ESAD_HallB-HPS.pdf (19 pages, 160355 bytes).
+Output written on ESAD_HallB-HPS.pdf (19 pages, 161213 bytes).
 PDF statistics:
- 395 PDF objects out of 1000 (max. 8388607)
- 360 compressed objects within 4 object streams
+ 398 PDF objects out of 1000 (max. 8388607)
+ 363 compressed objects within 4 object streams
  74 named destinations out of 1000 (max. 500000)
  337 words of extra memory for PDF output out of 10000 (max. 10000000)
 
