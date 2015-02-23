@@ -28,20 +28,20 @@ The electromagnetic calorimeter (ECal), installed downstream of the pair spectro
 
 \begin{figure}[hp]
 \center
-\includegraphics[width=0.75\textwidth]{GView.png}
+\includegraphics[width=0.75\textwidth]{pics/GView.png}
 \caption{\small \label{GView} General view of the ECal (in color) suspended at the downstream end of the HPS analyzing magnet.}
 \end{figure}
 
 \begin{figure}[hp]
 \center
-\includegraphics[width=0.75\textwidth]{CrystalAssembly.png}
+\includegraphics[width=0.75\textwidth]{pics/CrystalAssembly.png}
 \caption{\small \label{AmplChain} View of an ECal crystal and the amplification chain.}
 \end{figure}
       
 
 \begin{figure}[hp]
 \center
-\includegraphics[width=0.75\textwidth]{ECal2.png}
+\includegraphics[width=0.75\textwidth]{pics/ECal2.png}
 \caption{\small \label{Crystals} Front view of the ECal crystals layout.}
 \end{figure}
       
@@ -55,12 +55,16 @@ After a 2:1 signal splitter, 1/3 of an amplified APD signal is fed to a single c
 \part{Shift Takers Instructions}
 
 \vspace*{\stretch{1}}      
-Most ECal controls are accessible through EPICS, from the main window (figure~\ref{EPICSmain}). From there you can access {\bf Temperature monitoring} in {\it Miscellaneous} then {\it ECal Temperature}, the {\bf ECal chiller} in {\it Devices} then {\it Chiller (ECAL)}, the {\bf Scalers} in {\it ECal Scaler GUI}, the {\bf ECal high voltage} in {\it Voltages} then {\it ECal HV} and the {\bf LED control panel} in {\it Devices} then {\it Flasher}.
+Most ECal controls are accessible through EPICS, from the main window (figure~\ref{EPICSmain}). From there you can access {\bf Temperature monitoring} in {\it Miscellaneous} then {\it ECal Temperature}, the {\bf ECal chiller} in {\it Devices} then {\it Chiller (ECAL)}, the {\bf Scalers} in {\it ECal Scaler GUI}, the {\bf ECal high voltage} in {\it Voltages} then {\it ECal HV} and the {\bf LED control panel} in {\it Devices} then {\it Flasher}.  
+
+If not already open, HPS's main EPICS window is opened as user \texttt{hpsrun} on \texttt{clonsl1}, \texttt{clonsl2}, or \texttt{clonsl3}, with the command \begin{center}\texttt{hps\_epics}\end{center}
+
+    {\em   In general, all shift workers should be using user \texttt{hpsrun} for instructions in this document.}
 \vspace*{\stretch{1}}      
 
 \begin{figure}[h!]
 \center
-\includegraphics[width=0.38\textwidth]{hps_epics_2014_12_15.png}
+\includegraphics[width=0.38\textwidth]{pics/hps_epics_2014_12_15.png}
 \caption{\small \label{EPICSmain} View of the Hall-B EPICS main window.}
 \end{figure}
 
@@ -72,70 +76,65 @@ Most ECal controls are accessible through EPICS, from the main window (figure~\r
 
 \begin{figure}[htbp]
 \center
-\includegraphics[width=0.65\textwidth]{EcalTemp_2014_12_20.png}
+\includegraphics[width=0.5\textwidth]{pics/EcalTemp_2014_12_20.png}
 \caption{\small \label{temp} View of the EPICS temperature monitoring window.}
 \end{figure}
       
 \begin{figure}[htbp]
 \center
-\includegraphics[width=0.95\textwidth]{ECal_temp_s.png}
+\includegraphics[width=0.8\textwidth]{pics/ECal_temp_s.png}
 \caption{\small \label{temp2} View of the EPICS temperature monitoring strip charts.}
 \end{figure}
 
        \section{Chiller}
 
-         The chiller allows to keep the calorimeter at the right temperature and should be ON and set at 17C at all times. The chiller can be monitored through its webcam (figure~\ref{ChillerCam}) or using its EPICS controls (figure~\ref{ChillerEPICS}). Shift takers should not attempt to change the chiller settings and call ECal expert in case of problem.
+         The chiller allows to keep the calorimeter at the right temperature and should be ON and set at 17C at all times. The chiller can be monitored through its webcam (figure~\ref{ChillerCam}) or using its EPICS controls (figure~\ref{ChillerCam}). Shift takers should not attempt to change the chiller settings and call ECal expert in case of problem.
+
+         The webcam is accessible either by the url \texttt{cctv10.jlab.org} in a web browser, or via the ``Monitoring'' tab on the main {\bf HPS Run Wiki}.
 
 \begin{figure}[h]
 \center
-\includegraphics[width=0.75\textwidth]{ChillerCam_2014_12_20.png}
-\caption{\small \label{ChillerCam} View of the chiller screen by webcam (cctv10.jlab.org).}
-\end{figure}
-
-\begin{figure}[h]
-\center
-\includegraphics[width=0.39\textwidth]{ChillerWin_2014_12_20.png}
-\caption{\small \label{ChillerEPICS} View of the EPICS ECal Chiller window.}
+\includegraphics[width=0.99\textwidth]{pics/ChillerCombo.png}
+%\includegraphics[width=0.5\textwidth]{pics/ChillerCam_2014_12_20.png}
+%\includegraphics[width=0.45\textwidth]{pics/ChillerWin_2014_12_20.png}
+\caption{\small \label{ChillerCam} View of the chiller by webcam (\texttt{cctv10.jlab.org}) and its EPICS window in normal operation.}
 \end{figure}
 
 
-      \section{Scalers}
 
-         Rates seen by the ECal are available in the EPICS (Fig \ref{Scalers}), they represent the rates as seen from the FADC and TDC electronics. The difference is mainly due to their different thresholds. One can also see scalers from the DAQ GUI (figure~\ref{DAQscalers}), this indicates the rates of clusters reconstructed by the trigger electronics. These numbers should all remain constant within ~10\% during stable beam operation. A strong increase is the indication of bad beam conditions or is due to the presence of a new source of noise, in the latter case, please contact ECal expert on call.
-
-\begin{figure}[hbp]
-\center
-\includegraphics[width=0.75\textwidth]{ECAL_FADC_SCALER_2014_12_20.png}
-\caption{\small \label{Scalers} View of the EPICS FADC and DSC2 scalers window.}
-\end{figure}
-
-\begin{figure}[hbp]
-\center
-\includegraphics[width=0.75\textwidth]{ecal-cluster-12-20-14.png}
-\caption{\small \label{DAQscalers} View of the DAQ scaler window.}
-\end{figure}
-
-   \section{High Voltages}
+   \section{Voltages}
 
       \subsection{Low Voltage Controls}
 
-      The low voltage power supply must be on before HV. It is controlled manually in the hall and should be monitored using its webcam (figures~\ref{LVCam}). Call the ECal expert if this appears not to be ON or shows an abnormal current.
+      The low voltage power supply must be on before HV is turned on.  The LV supply is controlled manually in the hall and should be monitored using its webcam (figures~\ref{LVCam}). Call the ECal expert if this appears not to be ON or shows an abnormal current.  Normal current is between 4.0 and 4.2 A.
+
+         A webcam is focused on the LV supply, accessible either by the url \texttt{cctv11.jlab.org} in a web browser, or via the ``Monitoring'' tab on the main {\bf HPS Run Wiki}.
 
 \begin{figure}[htbp]
 \center
-\includegraphics[width=0.75\textwidth]{LVCam_2014_12_20.png}
-\caption{\small \label{LVCam} View of the LV screen by webcam (cctv11.jlab.org).}
+\includegraphics[width=0.5\textwidth]{pics/LVCam_2014_12_20.png}
+\caption{\small \label{LVCam} View of the LV screen by webcam (\texttt{cctv11.jlab.org}).}
 \end{figure}
 
-      \subsection{Turning ON High Voltages}
+      \subsection{Turning ON/OFF High Voltages}
 
-      The high voltage supply of the ECal is controlled and monitored using the EPICS application (see figure~\ref{HV}). 
+      The high voltage supply of the ECal is controlled and monitored using the EPICS application (see figure~\ref{HV}).  It is accessible via the main EPICS window (\texttt{HV->ECal}), and has buttons to ramp up and down the entire calorimeter's high voltages, and open windows for individual channel control (figure~\ref{HVControl}).
 
 \begin{figure}[htbp]
 \center
-\includegraphics[width=0.95\textwidth]{ecalhv_2014_12_15_16:02:54.png}
+\includegraphics[width=0.95\textwidth]{pics/ecalhvmongui.png}
+%\includegraphics[width=0.95\textwidth]{pics/ecalhv_2014_12_15_16:02:54.png}
 \caption{\small \label{HV} View of the EPICS ECal HV monitoring window.}
 \end{figure}
+
+   \subsection{HV Current Monitoring}
+   Individual channels' currents can be monitoring in figure~\ref{HVControl}, and strip charts should be open for long term monitoring (accessible from the main EPICS GUI (figure~\ref{EPICSmain}) via the ``Strip-Tool'' button).  An example is shown in figure~\ref{fig:hvcurrentstrips}.  Jumps or drifts in current of more than 1 A should be noted in the logbook.
+
+   \begin{figure}[htbp]\centering
+       \includegraphics[width=16cm]{pics/hvcurrentstrip.png}
+       \caption{HV Current strip charts.\label{fig:hvcurrentstrips}}
+   \end{figure}
+
 
    \subsection{Responding to HV trips}
 
@@ -145,33 +144,61 @@ Most ECal controls are accessible through EPICS, from the main window (figure~\r
 
 \begin{figure}[htbp]
 \center
-\includegraphics[width=0.85\textwidth]{ecalhv_setting_2014_12_15.png}
-\caption{\small \label{HVControl} View of the EPICS ECal HV control window.}
+\includegraphics[width=0.85\textwidth]{pics/ecalhv_setting_2014_12_15.png}
+\caption{\small \label{HVControl} View of the EPICS ECal HV control window for individual channels.}
 \end{figure}
 
    \section{LED Monitoring}
 
-      \subsection{System operations - EPICS GUI}
+      \subsection{System operations}
       
-      The LED system is operated trough an EPICS GUI, that is accessible trough the main HPS EPICS menu, trough Devices, then Flasher (see Figure \ref{FlasherMEDM}).
+      The LED system is operated through an EPICS GUI accessible from the main HPS EPICS menu, through Devices, then Flasher (see Figure \ref{FlasherMEDM}).
 
 Shift takers are requested to operate the system in ``Sequence mode'' only. To do so, when requested, click on ``Initialize Flasher'', then verify the TOP frequency is 8000 Hz, and if necessary adjust it trough the proper drop-down menu. Finally, to start the sequence, click on ``Start Blue Seq'' (to use blue LEDs) or ``Start Red Seq'' (to use red LEDs). During such a run the DSC scaler screen allows to check the proper functioning of the channels (figure~\ref{LEDScalers}). 
 
 \begin{figure}[htbp]
 \center
-\includegraphics[width=0.75\textwidth]{FlasherMEDM.png}
+\includegraphics[width=0.75\textwidth]{pics/FlasherMEDM.png}
 \caption{\small \label{FlasherMEDM} The HPS-ECAL Led monitoring system EPICS GUI.}
 \end{figure}
 \begin{figure}[htbp]
 \center
-\includegraphics[width=0.95\textwidth]{DSCScalersLED_2014_12_20.png}
+\includegraphics[width=0.95\textwidth]{pics/DSCScalersLED_2014_12_20.png}
 \caption{\small \label{LEDScalers} The HPS DSC scaler during a LED run.}
 \end{figure}
 
+\subsection{Automatic LED Monitoring}
+A monitoring app is setup to record all channels successfully registered during an LED run.  It should be started before the LED sequence is started and viewed afterwards, with the command: \begin{center}\$HOME/scripts/ECalLEDMonitor.sh\end{center}.
+
+    {\bf \it TODO:  To Be Tested.  Make app accessibble from EPICS gui.}
       
    \section{Making a cosmic calibration run}
 
-   To be added later.
+   In addition to the calorimeter, the cosmic PMTs should be powered on.  Their HV control is under ``beam'' in the main EPICS gui's HV section.  They are named \texttt{ECal\_cosm1} and \texttt{ECal\_cosm2}.  The DAQ configuration should be set to \begin{center}\texttt{hps\_cosmic\_mode1\_thresh0.cfg}\end{center}  It takes at least one full day of data to acquire sufficient statistics for a cosmic calibration.
+
+   \section{Taking a Pedestal Run}
+
+   Pedestals are calculated at running luminosity with DAQ configuration \begin{center}\texttt{hps\_ecal\_pedestal\_mode7\_thresh50.cfg}\end{center} and monitored and analyzed with HPS's hps-java monitoring app via the command:
+   \begin{center}\$HOME/scripts/ECalCalculatePedestals.sh\end{center}
+Once the user deems the statistics sufficient in the monitoring plots, the app should be disconnected from the ET-ring and then output will be files \texttt{fadc37.ped} and \texttt{fadc39.ped} in the current working directory.  An expert should place them in the proper location for the DAQ to read.
+
+{\bf\it ? TODO: Make pedestal viewer app accessible from EPICS gui, and make it save ped files to an absolute path.}
+
+      \section{Scalers}
+
+         Rates seen by the ECal are available in the EPICS (Fig \ref{Scalers}), they represent the rates as seen from the FADC and TDC electronics. The difference is mainly due to their different thresholds. One can also see scalers from the DAQ GUI (figure~\ref{DAQscalers}), this indicates the rates of clusters reconstructed by the trigger electronics. These numbers should all remain constant within ~10\% during stable beam operation. A strong increase is the indication of bad beam conditions or is due to the presence of a new source of noise, in the latter case, please contact ECal expert on call.
+
+\begin{figure}[hbp]
+\center
+\includegraphics[width=0.75\textwidth]{pics/ECAL_FADC_SCALER_2014_12_20.png}
+\caption{\small \label{Scalers} View of the EPICS FADC and DSC2 scalers window.}
+\end{figure}
+
+\begin{figure}[hbp]
+\center
+\includegraphics[width=0.75\textwidth]{pics/ecal-cluster-12-20-14.png}
+\caption{\small \label{DAQscalers} View of the DAQ scaler window.}
+\end{figure}
 
 \newpage
 
@@ -180,15 +207,39 @@ Shift takers are requested to operate the system in ``Sequence mode'' only. To d
    \section{Localization of ECal elements for experts}
 
 {\bf REMINDER:} Since the ECal is within 3 feet of the beam line it needs to be surveyed by RADCON before any work can be done on it.
-
-{\it Location of elements (electronics, chiller...) in the Hall to be added with images.}
+\begin{itemize}
+\item
+The chiller is located beam-left just downstream of the calorimeter on the ground.
+\item
+The LED controllers are located at the top of the rack closest to the beamline in the Alcove.
+\item
+The TDC crates are in the rack closest to the beamline in the Alcove.
+\item
+The FADC crates and calorimeter signal splitters occupy the rack furthest from the beamline in the Alcove.
+\item
+The HV supply is on the Pie Tower in the rack closest to the beamline.
+\item
+The LV supply is on the Pie Tower at the top of the middle rack. 
+\end{itemize}
+{\it TODO: Add images.}
 
 
    \section{Cooling system}
 
      The cooling system is using a xxxx chiller that is controlled through EPICS (Fig to be added). The setting should not be modified, the temperature setting should be fixed at 17 degrees Celsius. In case of problem with the chiller contact ??? (who can take care of these in Hall-B engineer group?).
 
-     {\it Add basic information to reset the Chiller. Add link to manual.}
+     \subsection{Rebooting After Power Failure}
+     If the chiller loses power while in local mode, the ``power'' button must be pressed manually to restart it after power is restored.  In case it loses power while in remote mode, a procedure is necessary to reset it after power is restored:
+     \begin{enumerate}
+         \item Hold the ``up'' and ``down'' arrow buttons simultaneously for 10 seconds.
+         \item Press the ``computer'' button to go into local mode.
+         \item Press the ``power'' button to turn it off.
+         \item Press the ``power'' button to turn it on.
+         \item Press the ``computer'' button to return to remote mode.
+    \end{enumerate}
+
+
+     {\it TODO:  Add link to manual.}
 
    \section{Changing LV settings}
       Low voltage power supply should be set at $\pm5$V. The low voltage supply might have difficulties to get at this level because of the high current. If that was the case check, with all power supplies off, that all connection are goods. Then contact run coordinator to see if LV power supply addition is possible. 
@@ -200,25 +251,37 @@ Shift takers are requested to operate the system in ``Sequence mode'' only. To d
 
 \begin{figure}[htbp]
 \center
-\includegraphics[width=0.95\textwidth]{ecalhv_expertmap_2014_12_15.png}
+\includegraphics[width=0.95\textwidth]{pics/ecalhv_expertmap_2014_12_15.png}
 \caption{\small \label{ExpertMap} Expert HV channel map for reference.}
 \end{figure}
 
       If for some reason some channels were to drop in gain (or increase) or if the current drawn increases in a group, it might be necessary to change the HV settings in the expert ECal EPICS control (Fig.~\ref{EHV}). A modification of the voltage will lead to a modification of the gain used by the trigger system, these values need to be updated at the same time!
+      \subsection{HV Save/Restore}
+      A system to save and restore the entire calorimeter's voltage settings is available via buttons in the main monitoring window.  If the voltage setpoints are changed, a backup should be made of the new settings.  This must be run as a user in group \texttt{clas-4};  user \texttt{hpsrun} does not have sufficient priveleges to save/restore voltage settings. 
+      An example of the restore window is shown in figure~\ref{fig:hvrestore}
 
 \begin{figure}[htbp]
 \center
-\includegraphics[width=0.85\textwidth]{ecalhv_parameters_2014_12_15.png}
+\includegraphics[width=0.85\textwidth]{pics/ecalhv_parameters_2014_12_15.png}
 \caption{\small \label{EHV} View of the EPICS HV expert control window. It is accessed from the parameters button in the ECal HV control screen \ref{HVControl}}
+\end{figure}
+
+\begin{figure}[htbp]\centering
+    \includegraphics[width=8cm]{pics/hvrestore.png}
+    \caption{The gui interface to save/restore HV settings.  \label{fig:hvrestore}}
 \end{figure}
 
    \section{Long term HV monitoring}
 
-{\it Add here commands to make current plot of fig~\ref{HVhistory}}
+   An hourly snapshot of HV currents is stored by a cron job (and in the EPICs and MYA databases).  Currently the easiest way to view it is as user \texttt{hpsrun} on \texttt{clonpcNN} by excuting the command:
+   \begin{center}
+   \texttt{\$HOME/.ecalhv/plotEcalHV.py}
+   \end{center}
+The product should be a plot like figure~\ref{HVhistory}.
 
 \begin{figure}[htbp]
 \center
-\includegraphics[width=0.95\textwidth]{ECALHVCURRENTS_2014_12_20.png}
+\includegraphics[width=0.95\textwidth]{pics/ECALHVCURRENTS_2014_12_20.png}
 \caption{\small \label{HVhistory} Expert HV current history.}
 \end{figure}
 
@@ -232,7 +295,7 @@ This section has to be replaced with instructions to use the CLAS\_css GUI.
 
 \begin{figure}[htbp]
 \center
-\includegraphics[width=0.85\textwidth]{LEDExpert_2014_12_20.png}
+\includegraphics[width=0.85\textwidth]{pics/LEDExpert_2014_12_20.png}
 \caption{\small \label{LEDexpert} View of the LED expert controls.}
 \end{figure}
 
