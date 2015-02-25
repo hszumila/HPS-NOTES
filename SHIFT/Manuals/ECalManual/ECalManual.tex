@@ -7,13 +7,13 @@
 \makeatother
 
 
-\title{Manual for HPS ECal v1.3}
+\title{Manual for HPS ECal v1.5}
 
-\author{ECal cell phone: 757-810-1489 (ECal cell phone) \\ 
+\author{ECal On-Call Cell Phone: 757-810-1489 \\ 
 Authors: \\
-General contact: Rapha\"el \textsc{Dupr\'e} (dupre@ipno.in2p3.fr)\\ 
-LED system: Andrea \textsc{Celentano} (andrea.celentano@ge.infn.it)\\
-LV/HV supply and chiller: Nathan \textsc{Baltzell} (baltzell@jlab.org)\\
+General contact: Rapha\"el \textsc{Dupr\'e} (\texttt{dupre@ipno.in2p3.fr})\\ 
+LED system: Andrea \textsc{Celentano} (\texttt{andrea.celentano@ge.infn.it})\\
+LV/HV supply and chiller: Nathan \textsc{Baltzell} (\texttt{baltzell@jlab.org})\\
 }
 
 \date{\today} %01/07/2014
@@ -207,6 +207,7 @@ Once the user deems the statistics sufficient in the monitoring plots, the app s
    \section{Localization of ECal elements for experts}
 
 {\bf REMINDER:} Since the ECal is within 3 feet of the beam line it needs to be surveyed by RADCON before any work can be done on it.
+   {\footnotesize
 \begin{itemize}
 \item
 The chiller is located beam-left just downstream of the calorimeter on the ground.
@@ -222,14 +223,16 @@ The HV supply is on the Pie Tower in the rack closest to the beamline.
 The LV supply is on the Pie Tower at the top of the middle rack. 
 \end{itemize}
 {\it TODO: Add images.}
-
+}
 
    \section{Cooling system}
 
-     The cooling system is using a xxxx chiller that is controlled through EPICS (Fig to be added). The setting should not be modified, the temperature setting should be fixed at 17 degrees Celsius. In case of problem with the chiller contact ??? (who can take care of these in Hall-B engineer group?).
+   The cooling system is using a Thermo Scientific chiller that can be controlled through EPICS (\ref{ChillerCam}). The setting should not be modified; the temperature setting should be fixed at 17 degrees Celsius. In case of problem with the chiller contact ??? (who can take care of these in Hall-B engineer group?).  The manual for the chiller can be found here:
 
+   {\noindent\footnotesize\url{http://www.nist.gov/ncnr/upload/Circulating-Bath\_Thermo-Scientific\_NESLAB-RTE-7.pdf}}
      \subsection{Rebooting After Power Failure}
      If the chiller loses power while in local mode, the ``power'' button must be pressed manually to restart it after power is restored.  In case it loses power while in remote mode, a procedure is necessary to reset it after power is restored:
+   {\footnotesize
      \begin{enumerate}
          \item Hold the ``up'' and ``down'' arrow buttons simultaneously for 10 seconds.
          \item Press the ``computer'' button to go into local mode.
@@ -237,14 +240,38 @@ The LV supply is on the Pie Tower at the top of the middle rack.
          \item Press the ``power'' button to turn it on.
          \item Press the ``computer'' button to return to remote mode.
     \end{enumerate}
-
-
-     {\it TODO:  Add link to manual.}
+    }
 
    \section{Changing LV settings}
       Low voltage power supply should be set at $\pm5$V. The low voltage supply might have difficulties to get at this level because of the high current. If that was the case check, with all power supplies off, that all connection are goods. Then contact run coordinator to see if LV power supply addition is possible. 
 
-   \section{Changing HV settings}
+   \section{High Voltage}
+   \subsection{Restarting the IOC}
+   Occaissonaly the soft IOC for the HV needs to be manually restarted.  Symptoms of this condition include errors messages from EPICS when trying to turn on/off voltages and white blocks in the main HV screen (figure~\ref{HV}).  The IOC always needs to be restarted if the mainframe is power cycled.  
+   
+   Currently, the HV IOC runs in a ``screen'' on \texttt{clonioc1}.  To restart it, follows these steps:
+   {\footnotesize
+   \begin{enumerate}
+       \item \texttt{`ssh hpsrun@clonioc1'}
+       \item \texttt{`screen -ls'} to list running screens
+       \item \texttt{`screen -x ECALHVIOC'} to attach to the screen running the IOC
+       \item \texttt{`ctrl-c'} to kill the IOC
+       \item \texttt{`up-arrow ; return'} to restart the IOC
+       \item \texttt{`ctrl-a-d'} to detach from the screen
+   \end{enumerate}
+   }
+   If for some reason this does not work (e.g. no screen named something like \texttt{ECALHVIOC} is listed in \#2, or \#5 does not start the IOC), you can start from scratch:
+   {\footnotesize
+   \begin{enumerate}
+       \item \texttt{`ssh hpsrun@clonioc1'}
+       \item \texttt{`screen -S ECALHVIOC'} to create and attach to a new screen named \texttt{ECALHVIOC}
+       \item \texttt{`cd /home/nerses/github\_test/epics/apps/iocBoot/iocECal\_Voltages'}
+       \item \texttt{`./st.cmd'} to start the IOC
+       \item \texttt{`ctrl-a-d'} to detach from the screen
+   \end{enumerate}
+   }
+   Don't leave a terminal open connected to this screen.
+   \subsection{Changing HV Settings}
       {\bf NOTE:} Changing voltage settings should be taken care of in coordination with the ECal group (contact R.~Dupre). Current setting can be increased in case of need, please document this change in the log book and notify the ECal expert on call.
 
  {\bf NOTE:} The ECal HV groups had to be renumbered in the EPICS, the correspondence map (figure~\ref{ExpertMap}) is available in the main ECal HV monitoring window with the Expert HV Map button.
@@ -271,7 +298,7 @@ The LV supply is on the Pie Tower at the top of the middle rack.
     \caption{The gui interface to save/restore HV settings.  \label{fig:hvrestore}}
 \end{figure}
 
-   \section{Long term HV monitoring}
+   \subsection{Long Term HV monitoring}
 
    An hourly snapshot of HV currents is stored by a cron job (and in the EPICs and MYA databases).  Currently the easiest way to view it is as user \texttt{hpsrun} on \texttt{clonpcNN} by excuting the command:
    \begin{center}
