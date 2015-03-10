@@ -1,14 +1,15 @@
 \documentclass[12pt]{article}
 \usepackage{graphicx}
 \usepackage{subfigure}
+\usepackage{color}
 %\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
 %\geometry{letterpaper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
 
 % See the ``Article customise'' template for come common customisations
 
-\title{HPS DAQ Operations Manual v1.0}
-\author{Per Hansson Adrian, Sergey Boiarinov\thanks{Contact person for document.} }
+\title{HPS DAQ Operations Manual v1.1}
+\author{Per Hansson Adrian, Omar Moreno, Sergey Boiarinov\thanks{Contact person for document.} }
 %\date{} % delete this line to display the current date
 
 %%% BEGIN DOCUMENT
@@ -37,7 +38,7 @@ For the ECal, every VXS crate contains a Readout Controller (ROC) that collects 
 
 \begin{enumerate}
 \item 
-Log into \texttt{clondaq1} as \texttt{clasrun}.
+Log into \texttt{clondaq3} as \texttt{clasrun}.
 %\item 
 %If not sure, check that you can open a X window
 %\begin{enumerate}
@@ -47,10 +48,10 @@ Log into \texttt{clondaq1} as \texttt{clasrun}.
 %Kill xwindow, start new one (you will be on \texttt{clon03}) and log into \texttt{clon10}.  Make sure \texttt{xterm} command can open xterminal.
 %\end{enumerate}
 \item 
-To start all DAQ processes, type the following command in a terminal: \texttt{hps\_start}.
-This opens up all windows and GUIs needed on the current workspace. 
-\item
-The workspace should look like Fig.~\ref{fig:coda}.
+To start all DAQ processes, open a terminal:\newline
+\texttt{cd \$CLAS} \newline
+\texttt{hpsdaq3\_start} \newline
+This opens up all windows needed on the current workspace. The workspace should look like Fig.~\ref{fig:coda}.
 \end{enumerate}
 %=======================
 \begin{figure}[htbp]
@@ -63,52 +64,146 @@ The workspace should look like Fig.~\ref{fig:coda}.
 \end{figure}
 %=======================
 
+\subsection{Troubleshooting}
 
-\subsection{Starting a normal run}
+\subsubsection{DAQ won't start}
+Make sure that all CODA processes are killed before running the start script above.
+
+\subsection{Start and stop a run}
 \begin{enumerate}
 \item
-Make sure beam conditions are stable and ready for running. See beam line manual for more details.
+Beamline checklist
+\begin{enumerate}
 \item
-Make sure the ECal is powered and its status is OK. See ECal manual for more details.
+Beam conditions are ready for running (see beam line manual for more details).
+\end{enumerate}
 \item
-Make sure the SVT is powered and its status is OK. See SVT manual for more details.
+ECal Checklist
+\begin{enumerate}
 \item
-Make sure the SVT position is appropriate for the run. {\bf Check with shift leader if not sure.}
+Check that ECal is ready to go  (see ECal manual for more details).
+\end{enumerate}
 \item
-Check that the DAQ workspace is ready to go (see Section above how to start the DAQ).
+SVT Checklist
+\begin{enumerate}
+\item
+SVT position is appropriate for the run. {\bf Check with shift leader if not sure.}
+\item 
+SVT Flange boards and SVT Front end boards (FEBs) are powered with currents as specified. 
+\newline
+If not, restart the FEBs turning on in the order: {\bf DIG, ANAP and then ANAN}. Then power all the flange channels. Go to the "svtDpmLinkStatus" GUI and check that the FEB link errors are not incrementing. If they do, try to cycle the flange board power (wait 10-20s between cycles). You may need up to 4 cycles.
+\item
+SVT DAQ is in a state ready to run:
+\begin{enumerate}
+\item
+No link errors.
+\item
+All DPMs are in "Ready" state.
+\item
+All DPMs are in "Stopped" CODA state. 
+\newline
+If the DAQ was stopped from a previous run the allowed CODA states are "Download" or "Prestart".
+\end{enumerate}
+\end{enumerate}
+
 \item
 {\bf If continuing with same the same run configuration from a stopped run continue to \ref{item:prestart}.}
 \item
-In the \texttt{RunControl} GUI: click \texttt{connect}, a new GUI opens.
+Go to the \texttt{RunControl} GUI: click \texttt{connect}, a new GUI window opens.
 \item
-Click on \texttt{DAQ Configuration} and choose the \texttt{HPS} configuration.
+Click on \texttt{DAQ Configuration} and choose the \texttt{hps3} configuration. Click OK.
 \item
-Press \texttt{Config} in the same GUI and choose run configuration file. Click OK.
-\item
-Make sure that datafile name, daq configuration and run configuration file name shown on \texttt{RunControl} GUI are correct.
+Check that run number, data filename and run configuration filename shown on \texttt{RunControl} GUI are correct. The "download" button should appear. 
 \item
 \label{item:download}
-Press \texttt{Download}. When \texttt{Prestart} button shows up the DAQ is ready to take data. 
+Press \texttt{Download}. 
+\begin{enumerate}
+\item
+Wait until the "Prestart" button appears and  \texttt{RunControl} GUI reports that Download was completed. This might takes up to 30s to complete. 
+\item
+Go to the \texttt{svtDpmRunState} GUI and check that all DPM's are in "Download" state. \
+\item
+When \texttt{Prestart} button shows up the DAQ is ready to take data. 
+\end{enumerate}
 \item
 \label{item:prestart}
 Press \texttt{Prestart} and wait between 5 and 10s and no errors are reported. 
+\begin{enumerate}
 \item
-Press \texttt{Start Run} to start data taking. Check that the run status is 'running' and that triggers are issued.
+Go to the \texttt{svtDpmRunState} GUI and check that all DPM's are in "Prestart" state. 
+\item
+Go to the \texttt{svtHybSync} GUI and check that all hybrids are in "sync" i.e. the \texttt{SyncDetected} variable should be \texttt{0xf} for all hybrids.
+\end{enumerate}
+\item
+Press \texttt{Go} to start the run. 
+\begin{enumerate}
+\item
+Check that the run status is 'running' and that triggers are issued. 
+\item
+Verify SVT DAQ started run properly:
+\begin{enumerate}
+\item
+Go to the \texttt{svtDpmRunState} GUI and 
+\begin{enumerate}
+\item
+Check that all DPM's are in "Go" state 
+\item
+Check that the \texttt{TrigCount} is incrementing for both DPM and DTMs and are similar.
+\item
+Check that the \texttt{EventCount} is incrementing.
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
 \end{enumerate}
 
 \subsection{Stopping a run}
 \begin{enumerate}
 \item
-Go to the \texttt{RunControl}  GUI and press \texttt{End Run} to stop data taking. Check that the run status is 'stopped' and that triggers are not issued.
+Go to the \texttt{RunControl}  GUI and press \texttt{End Run} to stop data taking. 
+\item
+Verify the SVT DAQ ended in a good state: 
+\begin{enumerate}
+\item
+Go to the \texttt{svtDpmRunState} GUI and:
+\begin{enumerate}
+\item
+Check that the CODA run state is  \texttt{Stopped} for all DPMs.
+\item
+Check that the \texttt{TrigCount} and \texttt{EventCount} variables for DPMs and DTMs are identical.
+\end{enumerate}
+\end{enumerate}
 \end{enumerate}
 
-\subsection{Stopping and restarting the DAQ in case of problems}
+\subsection{Stopping and restarting the DAQ}
 
-\subsubsection{Stopping the DAQ}
+\subsubsection{SVT DAQ}
+
+{\bf Rebooting the "COBs"} \newline
+Open a terminal on \texttt{clondaq3}. \newline
+\texttt{cd CLAS/slac\_svt/svtdaq/daq/rceScripts} \newline
+\texttt{./reboot\_cob} \newline
+Wait until finished, can be up to 20s. \newline
+
+\textcolor{red}{What is the best way of checking that the DPMs are ok at boot up ?}
+
+
+{\bf Restart the control servers} \newline
+Open a terminal on \texttt{clondaq3}. \newline
+\texttt{cd CLAS/slac\_svt/svtdaq/daq/rceScripts} \newline
+\texttt{./rem\_restart} \newline
+Wait until finished, can be up to 20s. \newline
+
+\textcolor{red}{What is the best way of checking that the server started ok?}
+
+\subsubsection{Stopping and restarting CODA}
+
 If DAQ problems occur and restarting the run do not work all DAQ processes can be restarted by typing:
 \begin{enumerate}
 \item
-\texttt{hps\_exit} in a terminal on \texttt{clondaq1}
+\texttt{hpsdaq3\_exit} in a terminal on \texttt{clondaq3} \newline
+Wait for script to finish and check that no coda processes are running in the machine.
+\item
+\texttt{hpsdaq3\_start} in a terminal on \texttt{clondaq3} 
 % In the CODA run GUI: click \texttt{End Run} or \texttt{Abort} (whatever button is active)
 %\item
 %Click \texttt{Cancel}
@@ -130,9 +225,10 @@ If DAQ problems occur and restarting the run do not work all DAQ processes can b
 
 This will cleanup all processes and you can restart by following the procedures above. 
 
-\subsubsection{Restarting the DAQ in case of problems}
-Sometimes hardware reset needed to bring DAQ system back to normal. For HPS there are four VME/VXS crates:  \texttt{hps11},  \texttt{hps12},  \texttt{hps1} and  \texttt{hps2}. These can be power cycled to try and get back into the normal state. Crate \texttt{hps11} is a master, so it have to be rebooter first, followed by others.
-To reboot, do the following:
+
+\subsubsection{Reboot ECal or master TI crates}
+Sometimes hardware reset needed to bring the ECal DAQ system back to normal. For HPS there are four VME/VXS crates:  \texttt{hps11},  \texttt{hps12},  \texttt{hps1} and  \texttt{hps2}. These can be power cycled to try and get back into the normal state. Crate \texttt{hps11} is a master, so it have to be rebooted first, followed by others.
+To reboot, do the following in a terminal on \texttt{clondaq3}:
 \begin{enumerate}
 \item
 Type command \texttt{roc\_reboot hps11} in a terminal.  
@@ -140,7 +236,6 @@ Type command \texttt{roc\_reboot hps11} in a terminal.
 Type command \texttt{roc\_reboot crate\_id} in the same terminal where \texttt{crate\_id} is \texttt{hps12},  \texttt{hps1} or  \texttt{hps2}.
 \end{enumerate}
 
-If it does not help or you are unsure, contact the DAQ expert. 
 
 
 %\section{Monitoring}
