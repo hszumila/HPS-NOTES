@@ -1,20 +1,40 @@
 \documentclass[12pt]{article}
 \usepackage{graphicx}
 \usepackage{subfigure}
+\usepackage{url}
 %\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
 %\geometry{letterpaper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
 
 % See the ``Article customise'' template for come common customisations
 
-\title{HPS SVT Operations Manual \\ v0.2}
-\author{Per Hansson, John Jaros, Takashi Maruyama, \\ Tim Nelson\footnote{contact person for this document}, Marco Oriunno, Sho Uemura}
-\date{October 19, 2014} % delete this line to display the current date
+\title{HPS SVT Operations Manual \\ v1.0}
+\author{SVT On-Call Cell Phone: 757-541-7539 \\ 
+Authors: \\
+Per Hansson, John Jaros, Takashi Maruyama, \\ Tim Nelson\footnote{contact person for this document}, Marco Oriunno, Sho Uemura}
+\date{March 8, 2015} % delete this line to display the current date
 
 %%% BEGIN DOCUMENT
 \begin{document}
 
 \maketitle
+
+\section{Contact List}
+
+\begin{center}
+\begin{tabular}{lc}
+\hline \hline 
+    System & Experts \\
+\hline
+General expert & Tim Nelson \\
+SVT DAQ & Pelle Hansson \\
+SVT EPICS controls & Pelle Hansson, Wesley Moore \\
+MPOD power supply & Sho Uemura \\
+PLC interlocks & Brian Eng \\
+Cooling & Sho Uemura \\
+ \hline \hline
+\end{tabular}
+\end{center}
 
 \section{System Description}
 
@@ -52,23 +72,32 @@ Since the SVT sensors are close to the beam, some attention to beam conditions i
 \section{SVT Power Supplies}
 \label{sec:svtps}
 \subsection{System Description}
-The power needed to operate the SVT is supplied by five MPOD MPV8008I low voltage power supply modules inside a 10-slot Wiener EC crate, see Fig.~\ref{fig:ec_crate}. 
+The power and bias needed to operate the SVT is supplied by low voltage and high voltage power supply modules inside a 10-slot Wiener MPOD crate, see Fig.~\ref{fig:ec_crate}. 
 \begin{figure}
 \begin{center}
 \includegraphics[width=10cm]{ec_create.png}
 \caption{\label{fig:ec_crate}The Wiener power supply crate for the SVT.}
 \end{center}
 \end{figure}
-The crate is located in a rack in the pie tower with PTFE (teflon) insulated twisted pair copper wires used to bring power to the SVT in the Hall-B alcove. Each of the five modules supplies power to two FEBs. 
+The crate is located in a rack in the pie tower with PTFE (teflon) insulated twisted pair copper wires used to bring power to the SVT in the Hall-B alcove. 
 
-In addition to the low voltage power for the SVT, the crate also houses three ISEG EHS F201p\_805F high precision high voltage modules that provide the reverse bias voltage to the silicon sensors of the SVT. The 
-three modules each supply bias to SVT L1-3, L4-6 top or L4-6 bottom.  
+The low voltage power is supplied by Wiener MPV8008I low voltage power supply modules. Each module has 8 output channels (floating, with sense lines).
+Each of the five modules supplies power to two FEBs. 
+
+ISEG EHS F201p\_805F high precision high voltage modules provide the reverse bias voltage to the silicon sensors of the SVT. Each module has 16 output channels (floating). The three modules each supply bias to 12 sensors: SVT L1-3, L4-6 top or L4-6 bottom.  
+
+The last two slots in the crate are occupied by spare modules (one LV and one HV).
 
 \subsection{Control}
 \label{sec:svt_power_control}
-The SVT power supply and bias is fully controlled through GUIs to the EPICS control system. EPICS controls the EC crate directly through its SNMP interface which supply the FEBs with power. The FEBs regulate and distribute power down to the hybrid boards of the SVT sensor modules. The control and monitoring of the hybrid power (and temperature) is handled by an EPICS IOC running on the SVT DAQ crate. It is important to note that having cooling running is a prerequisite for any power being supplied to the SVT and configuration of the FEB are prerequisite for powering any hybrids.
+The SVT power supply and bias is fully controlled through GUIs to the EPICS control system. 
+EPICS controls the MPOD crate directly through its SNMP interface which supply the FEBs with power. 
+The FEBs regulate and distribute power down to the hybrid boards of the SVT sensor modules. 
+The control and monitoring of the hybrid power (and temperature) is handled by an EPICS IOC running on the SVT DAQ crate. 
 
-
+%It is important to note that having cooling running is a prerequisite for any power being supplied to the SVT and configuration of the FEB are prerequisite for powering any hybrids.
+Both cooling systems must be running before the MPOD can be turned on; this is enforced by an interlock. 
+Also, the FEBs must be configured before any hybrids can be powered.
 
 
 \subsubsection{Turning the SVT power and bias ON}
@@ -76,48 +105,26 @@ The SVT power supply and bias is fully controlled through GUIs to the EPICS cont
 
 To power ON all of the SVT follow this procedure:
 \begin{enumerate}
+\item Turn on SVT FEB Power
+\begin{enumerate}
+\item 
+Make sure that the SVT and FEB chillers are {\sc ON} and {\sc OK}, and the PLC interlock is enabled and OK. See Sec.~\ref{sec:svt_cooling} for operation of the cooling system.
+\item
+Find the SVT FEB Power Control GUI shown in Fig.~\ref{fig:svt_FrontEnd} (see~\ref{sec:monitoring_power} to restart if not running)
+\item
+In the {\sc ALL FEB CONTROL} section at the top, press the {\sc On} switch marked {\sc DIGI}. Wait until the corresponding status indicator turns {\sc GREEN} for every one of the ten FEBs, and no alarms go off.
+\item
+Repeat for {\sc ANAP} and {\sc ANAN}.
+\item
+Currents and temperature should start to update on the power and temperature GUI for the FEBs at this point. Check that values are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
+\end{enumerate}
+
 \item Turn on SVT Flange Power
 \begin{enumerate}
 \item
 Find the SVT Flange Power Control GUI, see Fig.~\ref{fig:svt_Flange}  (see~\ref{sec:monitoring_power} to restart if not running).
 \item
-Press the {\sc LV ON/OFF} next to each of the channels.
-\item
-Wait until all status indicators turn {\sc GREEN} and no alarms go off.
-\item
-Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
-\end{enumerate}
-
-\item Turn on SVT FEB Power
-\begin{enumerate}
-\item 
-Make sure that the cooling for theFEBs is {\sc ON} and {\sc OK}. See Sec.~\ref{sec:svt_cooling} for operation of the cooling system.
-\item
-Find the SVT FEB Power Control GUI shown in Fig.~\ref{fig:svt_FrontEnd} (see~\ref{sec:monitoring_power} to restart if not running)
-\item
-Press {\sc LV ON/OFF} for each of the three voltages of the ten FEB 
-\item
-Wait until all status indicators turn {\sc GREEN} and no alarms go off.
-\item
-Currents and temperature should start to update on the power and temperature GUI for the FEBs at this point. Check that values are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
-\end{enumerate}
-
-\item Turn on SVT Hybrid Power
-\begin{enumerate}
-\item 
-Make sure that the cooling for the SVT hybrids is {\sc ON} and {\sc OK}. See Sec.~\ref{sec:svt_cooling} for operation of the cooling system.
-\item
-Go to the DAQ GUI and do a {\sc download} with the normal HPS configuration. This configures the SVT FEB which allows the powering of the hybrids. Use the DAQ operations manual if needed. 
-\item 
-Find the SVT Main Status Control GUI in Fig.~\ref{fig:svt_Status_Main} (see~\ref{sec:monitoring_power} to restart if not running).
-\item
-Press {\sc SVT TOP ALL ON} to turn on power to the top half of the SVT.
-\item
-Wait until all status indicators turn {\sc GREEN} and no alarms go off.
-\item
-Press {\sc SVT BOT ALL ON} to turn on power to the top half of the SVT.
-\item
-Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+In the {\sc ALL SVT FLANGES} section at the bottom, press the {\sc On} switch. Wait until the status indicator turns {\sc GREEN} for every one of the four flange boards, and no alarms go off.
 \item
 Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
 \end{enumerate}
@@ -127,11 +134,25 @@ Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_ala
 \item
 Find the SVT High Voltage Bias Control GUI shown in Fig.~\ref{fig:svt_BIAS} (see~\ref{sec:monitoring_power} to restart if not running).
 \item
-Check that the set point in the {\sc SVT BIAS ALL V\_SET} is set to 180V. If not call the SVT expert.
+Check that the {\sc Voltage Setpoint Readback} column reads 180V for every channel. If not, call the SVT expert.
 \item
-Press {\sc SVT BIAS ALL ON/OFF}
+Press the {\sc On} switch marked {\sc SVT BIAS ALL ON/OFF}.
 \item
 Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+\end{enumerate}
+
+\item Turn on SVT Hybrid Power
+\begin{enumerate}
+\item
+Go to the DAQ GUI and do a {\sc download} with the normal HPS configuration. This configures the SVT FEB which allows the powering of the hybrids. Use the DAQ operations manual if needed. 
+\item 
+Find the SVT Hybrid GUI in Fig.~\ref{fig:svt_Status_Main} (see~\ref{sec:monitoring_power} to restart if not running).
+\item
+Press the {\sc On} switch marked {\sc All hybrids ON/OFF} to turn on power to the entire SVT.
+\item
+Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+\item
+Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
 \end{enumerate}
 \end{enumerate}
 
@@ -139,7 +160,7 @@ Wait until all status indicators turn {\sc GREEN} and no alarms go off.
 
 \subsubsection{Power and high voltage bias monitoring}
 \label{sec:monitoring_power}
-The SVT power and bias as well as alarms are monitored with five principle GUI's. To bring up the GUIs follow these procedures (see slow control manual for more information):
+The SVT power and bias as well as alarms are monitored with five principal GUI's. To bring up the GUIs follow these procedures (see slow control manual for more information):
 
 \begin{enumerate}
 \item Log into the {\sc clon01} computer in the counting house.  
@@ -164,7 +185,6 @@ Below is a description of each of the GUI's.
 \item Control: ON/OFF switch for each of the three voltages for individual hybrids.
 \item Control: set point for the three voltages for individual hybrids.
 \end{itemize}
-
 
 \item {\bf Flange Board GUI} in Fig.~\ref{fig:svt_Flange}.
 \begin{itemize}
