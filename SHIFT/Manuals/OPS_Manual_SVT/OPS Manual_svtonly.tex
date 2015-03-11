@@ -1,7 +1,7 @@
-\documentclass[12pt]{article}
+\documentclass[12pt]{report}
 \usepackage{graphicx}
 \usepackage{subfigure}
-\usepackage{url}
+\usepackage{fullpage}
 %\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
 %\geometry{letterpaper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
@@ -24,7 +24,7 @@ Per Hansson, John Jaros, Takashi Maruyama, \\ Tim Nelson\footnote{contact person
 \begin{center}
 \begin{tabular}{lc}
 \hline \hline 
-    System & Experts \\
+System & Experts \\
 \hline
 General expert & Tim Nelson \\
 SVT DAQ & Pelle Hansson \\
@@ -36,7 +36,7 @@ Cooling & Sho Uemura \\
 \end{tabular}
 \end{center}
 
-\section{System Description}
+\chapter{System Description}
 
 The SVT, shown in Figure~\ref{fig:SVT}, uses 6 layers of silicon extending from 10 cm to 90 cm downstream of the target inside of the PS vacuum chamber to measure charged particle trajectories.  
 %=======================
@@ -69,9 +69,8 @@ Cooling for the SVT is provided by a pair of chillers; one for the hybrids and s
 
 Since the SVT sensors are close to the beam, some attention to beam conditions is required prior to turning the SVT on and taking data. A number of systems provide the information used to assess whether beam conditions allow SVT operation. These systems include beam position monitors along the beamline, wire scanners located upstream of the HPS chicane, the wire attached to the SVT itself, a protection collimator located just upstream of the HPS chicane, and beam halo counters located along the beamline downstream of the collimator and signals from the HPS ECal which serve together as beam background monitors.  A detailed description of these systems and their operation can be found in the Beamline Operations Manual.
 
-\section{SVT Power Supplies}
-\label{sec:svtps}
-\subsection{System Description}
+
+\section{Power Supplies}
 The power and bias needed to operate the SVT is supplied by low voltage and high voltage power supply modules inside a 10-slot Wiener MPOD crate, see Fig.~\ref{fig:ec_crate}. 
 \begin{figure}
 \begin{center}
@@ -88,8 +87,7 @@ ISEG EHS F201p\_805F high precision high voltage modules provide the reverse bia
 
 The last two slots in the crate are occupied by spare modules (one LV and one HV).
 
-\subsection{Control}
-\label{sec:svt_power_control}
+\subsection{Control and Monitoring}
 The SVT power supply and bias is fully controlled through GUIs to the EPICS control system. 
 EPICS controls the MPOD crate directly through its SNMP interface which supply the FEBs with power. 
 The FEBs regulate and distribute power down to the hybrid boards of the SVT sensor modules. 
@@ -99,8 +97,43 @@ The control and monitoring of the hybrid power (and temperature) is handled by a
 Both cooling systems must be running before the MPOD can be turned on; this is enforced by an interlock. 
 Also, the FEBs must be configured before any hybrids can be powered.
 
+\section{SVT Cooling}
+The SVT cooling system, summarized in Table~\ref{tab:cooling} and Figure~\ref{fig:cooling_diagram}, controls the temperature of the sensors and removes heat dissipated by the electronics. 
+%===================
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{lccc}   
+\hline \hline 
+Location & Set Point & Resistive Load & Radiative Load \\      
+\hline
+SVT modules & -10 $^\circ$C & 75 W & 10 W  \\
+Piping to SVT modules & -20 $^\circ$C & 100 W & 0 \\
+Set point, SVT chiller & -20 $^\circ$C & - & - \\
+Front End Boards & 25 $^\circ$C & 100 W & 0  \\
+Set point, FEB chiller & 20 $^\circ$C & - & - \\
+ \hline \hline
+\end{tabular}
+\caption[]{SVT cooling design parameters.}
+\label{tab:cooling} 
+\end{center}
+\end{table}
+%===================
+%=======================
+\begin{figure}[htbp]
+\begin{center}
+    \includegraphics[width=\textwidth]{cooling_diagram}
+\caption{The SVT cooling system.}
+\label{fig:cooling_diagram}
+\end{center}
+\end{figure}
+%=======================
+Since the SVT is in vacuum, the cooling system is key for the safety and performance of the detector. The main heat sources are the sensor modules and their hybrid circuit boards and the Front End Boards (FEBs) which distribute power and DAQ to reduce the number of wires that must penetrate the vacuum flanges. An additional heat load results from the radiative heat exchange between the SVT U-support and the detector vacuum. The sensor modules need to be controlled to a sub-zero temperature, while the FEBs needs to be only thermally managed, removing the heat dissipated and keeping the active components to safe temperature, slightly above room temperature. For this reason it has been decided to have two separate chillers with independent loops and controls. The dew point in Hall B is expected to be at ~18 $^\circ$C. The cold line from the sensor chiller to the vacuum box will be insulated with 1Ó thick, non-flammable Armaflex.
 
-\subsubsection{Turning the SVT power and bias ON}
+The cooling loop for the sensor modules is connected to a Julabo Chiller, Model Presto A80, which will be set at -30 $^\circ$C. The heat transfer fluid is HFE-7000, a Fluorinert engineered fluid long used as heat transfer media for cooling applications. A bypass valve is placed at the chiller to manually adjust the mass flow. The inlet and the outlet lines pass through flanges on the detector vacuum box, where they are split after the feed trough to provide cooling in series to the top and the bottom parts of the detector. The cooling pipes in vacuum are flexible metal hoses from the vacuum feed through to the detector, while the cooling lines built in the detector are 0.25" rigid copper pipe. The flexible lines are brazed on one end to the rigid copper pipes of the detectors and connected with Swagelok fittings to the vacuum feedthroughs on the other end. The cooling feed through have a ceramic transition spool to insulate electrically the cooling line from the vacuum box. Dielectric fittings to break the electrical continuity of the cooling loop are placed outside the vacuum.  The drain ports are placed in proximity of the cooling feedthroughs together with two release valves, on the main supply and the main return line.
+In addition to the filter of the chiller, a second filter is located on the main supply line. A check valve is at the end of the main return line, just before the bypass. The estimated operating mass flow of the system without bypass is ~ 10 g/s, providing 5 g/s per cooling channel with a pressure drop ~1 bar.  The cooling loop inside vacuum is pneumatically tested up to 20 bars without showing any sign of failure.
+\chapter{Procedures}
+
+\section{Turning the SVT power and bias ON}
 
 
 To power ON all of the SVT follow this procedure:
@@ -156,62 +189,64 @@ Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_ala
 \end{enumerate}
 \end{enumerate}
 
-\subsection{Monitoring, Alarms and Interlocks}
+\chapter{Controls}
 
-\subsubsection{Power and high voltage bias monitoring}
+\section{Power and high voltage bias monitoring}
 \label{sec:monitoring_power}
 The SVT power and bias as well as alarms are monitored with five principal GUI's. To bring up the GUIs follow these procedures (see slow control manual for more information):
 
 \begin{enumerate}
 \item Log into the {\sc clon01} computer in the counting house.  
 \item Open a terminal and issue {\sc hps\_epics} command to open the main HPS GUI.
-\item Each of the individual GUIs can be opened by clicking the appropriate button in the HPS main GUI that opened.
+\item Click the button marked {\sc SVT} to open a drop-down menu.
+\item Each of the individual GUIs can be opened by clicking the appropriate button in the menu.
 \end{enumerate}
 
 
 Below is a description of each of the GUI's.
 \begin{itemize}
-\item {\bf Main status GUI} in Fig.~\ref{fig:svt_Status_Main}.
+%\item {\bf Main status GUI} in Fig.~\ref{fig:svt_Status_Main}.
+%\begin{itemize}
+%\item Monitoring: all measured currents from hybrids. 
+%\item Control: ON/OFF switch for top and bottom half separately as well as individual hybrids.
+%\item Links: {\sc BIAS}, {\sc FE Low Voltages} and {\sc Flange Boards} buttons open up the GUI for these objects (see below). There is also links to the  individual hybrid power control and monitoring GUI discussed below (EXPERT only).
+%\end{itemize}
+
+\item {\bf Hybrid GUI} in Fig.~\ref{fig:svt_HybridLV}.
 \begin{itemize}
 \item Monitoring: all measured currents from hybrids. 
 \item Control: ON/OFF switch for top and bottom half separately as well as individual hybrids.
 \item Links: {\sc BIAS}, {\sc FE Low Voltages} and {\sc Flange Boards} buttons open up the GUI for these objects (see below). There is also links to the  individual hybrid power control and monitoring GUI discussed below (EXPERT only).
-\end{itemize}
-
-\item {\bf Hybrid GUI} in Fig.~\ref{fig:svt_HybridLV} (EXPERT ONLY).
-\begin{itemize}
-\item Monitoring: Interlock status for hybrid power.
-\item Monitoring: all measured voltage and currents from hybrids. 
-\item Control: ON/OFF switch for each of the three voltages for individual hybrids.
-\item Control: set point for the three voltages for individual hybrids.
+%\item Monitoring: Interlock status for hybrid power.
+%\item Monitoring: all measured voltage and currents from hybrids. 
+%\item Control: ON/OFF switch for each of the three voltages for individual hybrids.
+%\item Control: set point for the three voltages for individual hybrids.
 \end{itemize}
 
 \item {\bf Flange Board GUI} in Fig.~\ref{fig:svt_Flange}.
 \begin{itemize}
-\item Monitoring: Interlock status for flange board power.
-\item Monitoring: all  currents to the flange boards. 
+%\item Monitoring: Interlock status for flange board power.
+\item Monitoring: all currents and voltages to the flange boards. 
 \item Control: ON/OFF switch for each flange board. 
 \item Control: Set point for voltage, trip and ramp values for each flange board (EXPERT ONLY).
 \end{itemize}
 
 \item {\bf FEB GUI} in Fig.~\ref{fig:svt_FrontEnd}.
 \begin{itemize}
-\item Monitoring: Interlock status for FEB power.
+%\item Monitoring: Interlock status for FEB power.
 \item Monitoring: all currents and voltages of the FEB.
 \item Control: ON/OFF switch for each FEB board. 
-\item Control: Set point for voltage, trip and ramp values for each flange board (EXPERT ONLY).
+\item Control: Set point for voltage, trip and ramp values for each frontend board (EXPERT ONLY).
 \end{itemize}
-
 
 \item {\bf High voltage bias GUI} in Fig.~\ref{fig:svt_BIAS}.
 \begin{itemize}
-\item Monitoring: Interlock status for HV bias.
+%\item Monitoring: Interlock status for HV bias.
 \item Monitoring: all voltage set points for the SVT modules.
-\item Control: ON/OFF switch for all modules, each half and each module.  
+\item Control: ON/OFF switch for all modules and each module.  
 \item Control: Set point for voltage for all modules (EXPERT ONLY).
 \item Control: Set point for voltage and ramp values for each module (EXPERT ONLY).
 \end{itemize}
-
 
 \end{itemize}
 
@@ -223,10 +258,10 @@ Below is a description of each of the GUI's.
 \includegraphics[width=12cm]{svt_FrontEnd.png}
 \caption{SVT Front End Board power GUI.\label{fig:svt_FrontEnd}}
 \end{figure}
-\begin{figure}
-\includegraphics[width=12cm]{svt_Status_Main.png}
-\caption{SVT main status GUI.\label{fig:svt_Status_Main}}
-\end{figure}
+%\begin{figure}
+%\includegraphics[width=12cm]{svt_Status_Main.png}
+%\caption{SVT main status GUI.\label{fig:svt_Status_Main}}
+%\end{figure}
 \begin{figure}
 \includegraphics[width=12cm]{svt_HybridLV.png}
 \caption{SVT hybrid GUI.\label{fig:svt_HybridLV}}
@@ -235,6 +270,7 @@ Below is a description of each of the GUI's.
 \includegraphics[width=12cm]{svt_BIAS.png}
 \caption{SVT high voltage bias GUI.\label{fig:svt_BIAS}}
 \end{figure}
+
 
 
 \subsubsection{Alarms}
@@ -329,40 +365,6 @@ In case an the interlock system issues an interlock signal it triggers a fast sh
 
 
 \section{SVT Cooling}
-\subsection{System Description}
-The SVT cooling system, summarized in Table~\ref{tab:cooling} and Figure~\ref{fig:cooling_diagram}, controls the temperature of the sensors removes heat dissipated by the electronics. 
-%===================
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{lccc}   
-\hline \hline 
-    Location & Set Point & Resistive Load & Radiative Load \\      
-\hline
-Sensor Modules & -20 $^\circ$C & 75 W & 10 W  \\
-Piping, module chiller & -30 $^\circ$C & 100 W & 0 \\
-Set point, module chiller 1 & -30 $^\circ$C & - & - \\
-Front End Boards & 30 $^\circ$C & 100 W & 0  \\
-Set point, FEB chiller & 20 $^\circ$C & - & - \\
- \hline \hline
-\end{tabular}
-\caption[]{SVT cooling design parameters.}
-\label{tab:cooling} 
-\end{center}
-\end{table}
-%===================
-%=======================
-\begin{figure}[htbp]
-\begin{center}
-    \includegraphics[width=\textwidth]{cooling_diagram}
-\caption{The SVT cooling system.}
-\label{fig:cooling_diagram}
-\end{center}
-\end{figure}
-%=======================
-Since the SVT is in vacuum, the cooling system is key for the safety and performance of the detector. The main heat sources are the sensor modules and their hybrid circuit boards and the Front End Boards (FEBs) which distribute power and DAQ to reduce the number of wires that must penetrate the vacuum flanges. An additional heat load results from the radiative heat exchange between the SVT U-support and the detector vacuum. The sensor modules need to be controlled to a sub-zero temperature, while the FEBs needs to be only thermally managed, removing the heat dissipated and keeping the active components to safe temperature, slightly above room temperature. For this reason it has been decided to have two separate chillers with independent loops and controls. The dew point in Hall B is expected to be at ~18 $^\circ$C. The cold line from the sensor chiller to the vacuum box will be insulated with 1Ó thick, non-flammable Armaflex.
-
-The cooling loop for the sensor modules is connected to a Julabo Chiller, Model Presto A80, which will be set at -30 $^\circ$C. The heat transfer fluid is HFE-7000, a Fluorinert engineered fluid long used as heat transfer media for cooling applications. A bypass valve is placed at the chiller to manually adjust the mass flow. The inlet and the outlet lines pass through flanges on the detector vacuum box, where they are split after the feed trough to provide cooling in series to the top and the bottom parts of the detector. The cooling pipes in vacuum are flexible metal hoses from the vacuum feed through to the detector, while the cooling lines built in the detector are 0.25" rigid copper pipe. The flexible lines are brazed on one end to the rigid copper pipes of the detectors and connected with Swagelok fittings to the vacuum feedthroughs on the other end. The cooling feed through have a ceramic transition spool to insulate electrically the cooling line from the vacuum box. Dielectric fittings to break the electrical continuity of the cooling loop are placed outside the vacuum.  The drain ports are placed in proximity of the cooling feedthroughs together with two release valves, on the main supply and the main return line.
-In addition to the filter of the chiller, a second filter is located on the main supply line. A check valve is at the end of the main return line, just before the bypass. The estimated operating mass flow of the system without bypass is ~ 10 g/s, providing 5 g/s per cooling channel with a pressure drop ~1 bar.  The cooling loop inside vacuum is pneumatically tested up to 20 bars without showing any sign of failure.
 
 \subsection{Control and Operations} \label{sec:svt_cooling}
 
