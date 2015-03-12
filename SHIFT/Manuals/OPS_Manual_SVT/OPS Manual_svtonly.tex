@@ -194,34 +194,34 @@ As the coordinate transformation is done automatically, all you need to specify 
 The SVT power and bias as well as alarms are monitored with five principal GUI's. To bring up the GUIs follow these procedures (see slow control manual for more information):
 
 \begin{enumerate}
-\item Log into the {\sc clon01} computer in the counting house.  
-\item Open a terminal and issue {\sc hps\_epics} command to open the main HPS GUI.
-\item Click the button marked {\sc SVT} to open a drop-down menu.
+\item Log into the \textbf{clon01} computer in the counting house.  
+\item Open a terminal and issue \textbf{hps\_epics} command to open the main HPS GUI.
+\item Click the button marked \textbf{SVT} to open a drop-down menu.
 \item Each of the individual GUIs can be opened by clicking the appropriate button in the menu.
 \end{enumerate}
 
 
 Below is a description of each of the GUI's.
 \begin{itemize}
-%\item {\bf Main status GUI} in Fig.~\ref{fig:svt_Status_Main}.
+%\item \textbf{Main status GUI} in Fig.~\ref{fig:svt_Status_Main}.
 %\begin{itemize}
 %\item Monitoring: all measured currents from hybrids. 
 %\item Control: ON/OFF switch for top and bottom half separately as well as individual hybrids.
-%\item Links: {\sc BIAS}, {\sc FE Low Voltages} and {\sc Flange Boards} buttons open up the GUI for these objects (see below). There is also links to the  individual hybrid power control and monitoring GUI discussed below (EXPERT only).
+%\item Links: \textbf{BIAS}, \textbf{FE Low Voltages} and \textbf{Flange Boards} buttons open up the GUI for these objects (see below). There is also links to the  individual hybrid power control and monitoring GUI discussed below (EXPERT only).
 %\end{itemize}
 
-\item {\bf Hybrid GUI} in Fig.~\ref{fig:svt_HybridLV}.
+\item \textbf{Hybrid GUI} in Fig.~\ref{fig:svt_HybridLV}.
 \begin{itemize}
 \item Monitoring: all measured currents from hybrids. 
 \item Control: ON/OFF switch for top and bottom half separately as well as individual hybrids.
-\item Links: {\sc BIAS}, {\sc FE Low Voltages} and {\sc Flange Boards} buttons open up the GUI for these objects (see below). There is also links to the  individual hybrid power control and monitoring GUI discussed below (EXPERT only).
+\item Links: \textbf{BIAS}, \textbf{FE Low Voltages} and \textbf{Flange Boards} buttons open up the GUI for these objects (see below). There is also links to the  individual hybrid power control and monitoring GUI discussed below (EXPERT only).
 %\item Monitoring: Interlock status for hybrid power.
 %\item Monitoring: all measured voltage and currents from hybrids. 
 %\item Control: ON/OFF switch for each of the three voltages for individual hybrids.
 %\item Control: set point for the three voltages for individual hybrids.
 \end{itemize}
 
-\item {\bf Flange Board GUI} in Fig.~\ref{fig:svt_Flange}.
+\item \textbf{Flange Board GUI} in Fig.~\ref{fig:svt_Flange}.
 \begin{itemize}
 %\item Monitoring: Interlock status for flange board power.
 \item Monitoring: all currents and voltages to the flange boards. 
@@ -229,7 +229,7 @@ Below is a description of each of the GUI's.
 \item Control: Set point for voltage, trip and ramp values for each flange board (EXPERT ONLY).
 \end{itemize}
 
-\item {\bf FEB GUI} in Fig.~\ref{fig:svt_FrontEnd}.
+\item \textbf{FEB GUI} in Fig.~\ref{fig:svt_FrontEnd}.
 \begin{itemize}
 %\item Monitoring: Interlock status for FEB power.
 \item Monitoring: all currents and voltages of the FEB.
@@ -237,7 +237,7 @@ Below is a description of each of the GUI's.
 \item Control: Set point for voltage, trip and ramp values for each frontend board (EXPERT ONLY).
 \end{itemize}
 
-\item {\bf High voltage bias GUI} in Fig.~\ref{fig:svt_BIAS}.
+\item \textbf{High voltage bias GUI} in Fig.~\ref{fig:svt_BIAS}.
 \begin{itemize}
 %\item Monitoring: Interlock status for HV bias.
 \item Monitoring: all voltage set points for the SVT modules.
@@ -311,7 +311,7 @@ The alarm handling is handled by the ALH extension to EPICS that is widely used 
 \caption{SVT alarm handler GUI.\label{fig:svt_alarm_gui}}
 \end{figure}
 
-Each level has two buttons: a {\sc guidance} button which opens a pop up display with more information and an {\sc action} button which acknowledges the alarm. 
+Each level has two buttons: a \textbf{guidance} button which opens a pop up display with more information and an \textbf{action} button which acknowledges the alarm. 
 
 \begin{verbatim}
 In case any error please contact SVT expert.
@@ -325,20 +325,18 @@ More information about the alarm handler can be found in the slow control manual
 \section{Voltages}
 \label{sec:proc_voltages}
 \subsection{Turning the SVT power and bias ON}
-
-
 To power ON all of the SVT follow this procedure:
 \begin{enumerate}
 \item Turn on SVT FEB Power
 \begin{enumerate}
 \item 
-Make sure that the SVT and FEB chillers are {\sc ON} and {\sc OK}, and the PLC interlock is enabled and OK. See Sec.~\ref{sec:proc_cooling} for operation of the cooling system.
+Make sure that the SVT and FEB chillers are \textbf{ON} and \textbf{OK}, and the PLC interlock is enabled and OK. See Sec.~\ref{sec:proc_cooling} for operation of the cooling system.
 \item
 Find the SVT FEB Power Control GUI shown in Fig.~\ref{fig:svt_FrontEnd} (see~\ref{sec:monitoring_power} to restart if not running)
 \item
-In the {\sc ALL FEB CONTROL} section at the top, press the {\sc On} switch marked {\sc DIGI}. Wait until the corresponding status indicator turns {\sc GREEN} for every one of the ten FEBs, and no alarms go off.
+In the \textbf{ALL FEB CONTROL} section at the top, press the \textbf{On} switch marked \textbf{DIGI}. Wait until the corresponding status indicator turns \textbf{GREEN} for every one of the ten FEBs, and no alarms go off.
 \item
-Repeat for {\sc ANAP} and {\sc ANAN}.
+Repeat for \textbf{ANAP} and \textbf{ANAN}.
 \item
 Currents and temperature should start to update on the power and temperature GUI for the FEBs at this point. Check that values are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
 \end{enumerate}
@@ -348,7 +346,7 @@ Currents and temperature should start to update on the power and temperature GUI
 \item
 Find the SVT Flange Power Control GUI, see Fig.~\ref{fig:svt_Flange}  (see~\ref{sec:monitoring_power} to restart if not running).
 \item
-In the {\sc ALL SVT FLANGES} section at the bottom, press the {\sc On} switch. Wait until the status indicator turns {\sc GREEN} for every one of the four flange boards, and no alarms go off.
+In the \textbf{ALL SVT FLANGES} section at the bottom, press the \textbf{On} switch. Wait until the status indicator turns \textbf{GREEN} for every one of the four flange boards, and no alarms go off.
 \item
 Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
 \end{enumerate}
@@ -358,35 +356,139 @@ Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_ala
 \item
 Find the SVT High Voltage Bias Control GUI shown in Fig.~\ref{fig:svt_BIAS} (see~\ref{sec:monitoring_power} to restart if not running).
 \item
-Check that the {\sc Voltage Setpoint Readback} column reads 180V for every channel. If not, call the SVT expert.
+Check that the \textbf{Voltage Setpoint Readback} column reads 180V for every channel. If not, call the SVT expert.
 \item
-Press the {\sc On} switch marked {\sc SVT BIAS ALL ON/OFF}.
+Press the \textbf{On} switch marked \textbf{SVT BIAS ALL ON/OFF}.
 \item
-Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+Wait until all status indicators turn \textbf{GREEN} and the \textbf{Measured Voltage} column reads 180V for evey channel, and no alarms go off. If not, call the SVT expert.
 \end{enumerate}
 
 \item Turn on SVT Hybrid Power
 \begin{enumerate}
 \item
-Go to the DAQ GUI and do a {\sc download} with the normal HPS configuration. This configures the SVT FEB which allows the powering of the hybrids. Use the DAQ operations manual if needed. 
+Go to the DAQ GUI and do a \textbf{download} with the normal HPS configuration. This configures the SVT FEB which allows the powering of the hybrids. Use the DAQ operations manual if needed. 
 \item 
 Find the SVT Hybrid GUI in Fig.~\ref{fig:svt_HybridLV} (see~\ref{sec:monitoring_power} to restart if not running).
 \item
-Press the {\sc On} switch marked {\sc All hybrids ON/OFF} to turn on power to the entire SVT.
+Press the \textbf{On} switch marked \textbf{All hybrids ON/OFF} to turn on power to the entire SVT.
 \item
-Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+Wait until all status indicators turn \textbf{GREEN} and no alarms go off.
 \item
 Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
 \end{enumerate}
 \end{enumerate}
 
+\subsection{Turning the SVT power and bias OFF}
+To power OFF all of the SVT follow this procedure:
+\begin{enumerate}
+\item Turn off SVT FEB Power
+\begin{enumerate}
+\item 
+Make sure that the SVT and FEB chillers are \textbf{ON} and \textbf{OK}, and the PLC interlock is enabled and OK. See Sec.~\ref{sec:proc_cooling} for operation of the cooling system.
+\item
+Find the SVT FEB Power Control GUI shown in Fig.~\ref{fig:svt_FrontEnd} (see~\ref{sec:monitoring_power} to restart if not running)
+\item
+In the \textbf{ALL FEB CONTROL} section at the top, press the three \textbf{Off} switches marked \textbf{DIGI}, \textbf{ANAP} and \textbf{ANAN}.
+Wait until all status indicators turn \textbf{RED} for every one of the ten FEBs, and no alarms go off.
+\end{enumerate}
+
+\item Turn off SVT Flange Power
+\begin{enumerate}
+\item
+Find the SVT Flange Power Control GUI, see Fig.~\ref{fig:svt_Flange}  (see~\ref{sec:monitoring_power} to restart if not running).
+\item
+In the \textbf{ALL SVT FLANGES} section at the bottom, press the \textbf{Off} switch.
+Wait until the status indicator turns \textbf{RED} for every one of the four flange boards, and no alarms go off.
+\item
+Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
+\end{enumerate}
+
+\item Turn off SVT High Voltage Bias
+\begin{enumerate}
+\item
+Find the SVT High Voltage Bias Control GUI shown in Fig.~\ref{fig:svt_BIAS} (see~\ref{sec:monitoring_power} to restart if not running).
+\item
+Press the \textbf{Off} switch marked \textbf{SVT BIAS ALL ON/OFF}.
+\item
+Wait until all status indicators turn \textbf{RED} and the \textbf{Measured Voltage} column reads 0V for evey channel, and no alarms go off.
+If not, call the SVT expert.
+\end{enumerate}
+
+\end{enumerate}
+
 \section{Cooling and Interlocks}
 \label{sec:proc_cooling}
-\textbf{EXPERTS ONLY: }The startup procedure is as follows.
-When the SVT detector is under vacuum, the cooling must be switched on before the detector is powered, while the cooling is only recommended if the detector is in air. This condition is logically interlocked in the Slow Control. At the beginning the chiller is switched on and the by-pass valve is adjusted to get sufficient cooling flow, ~10 g/s. Once the flow is stable and the temperature of the Silicon sensors is close to the chiller set point, the Power Supplies can be switched on. 
+\subsection{Start FEB chiller}
+\begin{enumerate}
+\item Disable the FEB flow interlock.
+\item Verify that the temperature setpoint is 20 C. If not, call the SVT expert.
+\item Check the RTD temperature limits. The low limits should be set at 15 C and the high limits at 25 C. If not, call the SVT expert.
+\item Verify that all PLC alarms that affect the FEB chiller loop (supply RTD, return RTD, and vacuum) are in ``Ok'' state.
+\item Verify that the FEB valve is open.
+\item Start the chiller.
+\item Wait for the flow switch value to change, then enable the FEB flow interlock.
+If the flow switch does not trigger, call the SVT expert.
+\item At this point, the FEBs can be powered.
+\item The \textbf{current temperature} shown in the FEB chiller GUI should converge to the setpoint in a few minutes.
+\item When the temperature has reached the setpoint, lower the high limits in the interlock to their final values.
+\end{enumerate}
 
-\textbf{EXPERTS ONLY: }The procedure for draining the system is as follows
-To drain the system in case of an access required for maintenance, all the detector must be powered off, the solenoid valve closed and the chiller powered off. The ball valves on the supply and return line must be closed and the drain can be done through the Tee fittings by means of a clean compressed gas (air or nitrogen)
+\subsection{Start SVT chiller}
+\begin{enumerate}
+\item Change the chiller temperature setpoint to 20 C. (This assumes the SVT cooling loop is at room temperature to start. If it is cold, call the SVT expert for permission to use a lower starting setpoint.)
+\item Check the RTD temperature limits in the PLC GUI. The low limits should be set at -25 C. Change the high limits to 25 C.
+\item Verify that of the PLC alarms that affect the SVT chiller loop (flow, supply RTD, return RTD, and vacuum), the first (flow) is in ``Fault'' state, and the rest are in ``Ok'' state.
+\item Verify that of the software interlocks that affect the SVT chiller loop (supply RTD, return RTD, and vacuum), all are in ``Ok'' state.
+\item Disable the SVT flow interlock.
+Now all PLC alarms and software interlocks should be in ``Ok'' state, and the SVT valve should be open.
+If not, call the SVT expert.
+\item Start the chiller.
+\item Wait for the flow switch value to change, then enable the SVT flow interlock.
+If the flow switch does not change, call the SVT expert.
+\item Wait for the chiller temperature to stabilize at the setpoint.
+Some oscillation is normal in the short term, and the chiller may trip off (most likely if the chiller has been off for a while).
+If this happens, call the SVT expert to have the chiller reset, and start over from the beginning of the procedure.
+\item At this point (once temperature stabilizes), the hybrids can be powered.
+\item Lower the chiller temperature setpoint by 10 C (to 10 C).
+Wait 20 minutes for temperatures to equalize in the system (chiller temperature and RTDs should stabilize in about 10 minutes). If at the end of this time the chiller temperature is more than 0.5 C away from setpoint, or either RTD is more than 3 C away from setpoint, call the SVT expert.
+\item Repeat the previous step (lower setpoint by 10 C, wait for 20 minutes)  until the setpoint reaches its final value of -20 C.
+\item After the final waiting period, change the high limits in the PLC GUI to -15 C.
+\end{enumerate}
+
+\subsection{Stop FEB chiller}
+\begin{enumerate}
+\item Verify that hybrid bias, FEB power, and flange board power are off.
+\item Press the \textbf{Stop} button in the FEB chiller GUI. The interlocks will close the FEB valve and trip the MPOD.
+\end{enumerate}
+
+\subsection{Stop SVT chiller}
+\begin{enumerate}
+\item Verify that hybrid bias, FEB power, and flange board power are off.
+\item Press the \textbf{Stop} button in the SVT chiller GUI. The interlocks will close the SVT valve and trip the MPOD.
+\end{enumerate}
+
+\subsection{Draining SVT chiller (experts only)}
+\begin{enumerate}
+\item Disable the PLC interlocks for flow, supply RTD, and return RTD.
+\item Put the chiller in manual mode using the touchscreen.
+\item Follow the instructions in the chiller manual to drain the chiller. Use the big plastic jug and the two short pieces of rubber tube.
+
+\item When you disconnect a fitting in the chiller loop, drain both connections into a beaker.
+\item Purge both connections using the nitrogen line (use a Swagelok-to-VCR adapter with a used gasket), with the reservoir drain valve (the ball valve with a plastic handle) open.
+Be sure to cap the connection not being purged using a VCR cap and a used gasket. 
+\end{enumerate}
+
+\subsection{Filling SVT chiller (experts only)}
+\begin{enumerate}
+\item Disable the PLC interlocks for flow, supply RTD, and return RTD.
+\item Follow the instructions in the chiller manual to fill the chiller. Use the metal funnel.
+\item If the final level of the chiller is below 1/4, add a full jug of HFE 7000.
+\end{enumerate}
+%\textbf{EXPERTS ONLY: }The startup procedure is as follows.
+%When the SVT detector is under vacuum, the cooling must be switched on before the detector is powered, while the cooling is only recommended if the detector is in air. This condition is logically interlocked in the Slow Control. At the beginning the chiller is switched on and the by-pass valve is adjusted to get sufficient cooling flow, ~10 g/s. Once the flow is stable and the temperature of the Silicon sensors is close to the chiller set point, the Power Supplies can be switched on. 
+
+%\textbf{EXPERTS ONLY: }The procedure for draining the system is as follows
+%To drain the system in case of an access required for maintenance, all the detector must be powered off, the solenoid valve closed and the chiller powered off. The ball valves on the supply and return line must be closed and the drain can be done through the Tee fittings by means of a clean compressed gas (air or nitrogen)
 
 \begin{verbatim}Two kinds of potential accidents have been considered with the 
 corresponding mitigation actions. In the event of any leak, 
@@ -397,7 +499,7 @@ contact the expert immediately.
 
 \textbf{Cooling leakage outside vacuum:} \\ More fittings are potentially susceptible, although the consequences are less severe. The same interlocks apply as in the previous case, with the exception of loss of vacuum that stops the beam. The list of actions is the same but the beam does not need to be stopped.
 
-In case an the interlock system issues an interlock signal it triggers a fast shutdown of the affected supplies or the entire crate using the {\sc FAST\_SHUTDOWN} feature of the MPOD controller in the crate. Power will shut down ignoring any ramp-down parameters. To recover  the power supplies from an interlock signal:
+In case an the interlock system issues an interlock signal it triggers a fast shutdown of the affected supplies or the entire crate using the \textbf{FAST\_SHUTDOWN} feature of the MPOD controller in the crate. Power will shut down ignoring any ramp-down parameters. To recover  the power supplies from an interlock signal:
 \begin{enumerate}
 \item Find out which input triggered the interlock signal.
 \item See if the problem can be understood and corrected easily. Otherwise call the SVT expert.
@@ -425,7 +527,7 @@ The positions of the stage, wire and Layer 1 sensor edge will be shown in ``SVT 
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=10cm]{mover.eps}
+\includegraphics[width=10cm]{svt_movers.png}
 \caption{SVT Mover}
 \label{mover}
 \end{figure}
@@ -439,7 +541,7 @@ Wire scan should be repeated using the top wire and the bottom wire to check con
 \vskip 0.2 in
 
 \noindent
-{\bf Setup}
+\textbf{Setup}
 
 \begin{itemize}
 \item
@@ -455,7 +557,7 @@ Downstream Halo Counter is operational.
 \end{itemize}
 
 \noindent
-{\bf Scan}
+\textbf{Scan}
 
 A wire scan can be performed from the SVT Wire Scan GUI (Figure \ref{scannergui}).
 
