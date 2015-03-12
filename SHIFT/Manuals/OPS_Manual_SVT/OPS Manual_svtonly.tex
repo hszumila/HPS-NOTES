@@ -70,7 +70,7 @@ Cooling for the SVT is provided by a pair of chillers; one for the hybrids and s
 Since the SVT sensors are close to the beam, some attention to beam conditions is required prior to turning the SVT on and taking data. A number of systems provide the information used to assess whether beam conditions allow SVT operation. These systems include beam position monitors along the beamline, wire scanners located upstream of the HPS chicane, the wire attached to the SVT itself, a protection collimator located just upstream of the HPS chicane, and beam halo counters located along the beamline downstream of the collimator and signals from the HPS ECal which serve together as beam background monitors.  A detailed description of these systems and their operation can be found in the Beamline Operations Manual.
 
 
-\section{Power Supplies}
+\section{Voltages}
 The power and bias needed to operate the SVT is supplied by low voltage and high voltage power supply modules inside a 10-slot Wiener MPOD crate, see Fig.~\ref{fig:ec_crate}. 
 \begin{figure}
 \begin{center}
@@ -97,7 +97,7 @@ The control and monitoring of the hybrid power (and temperature) is handled by a
 Both cooling systems must be running before the MPOD can be turned on; this is enforced by an interlock. 
 Also, the FEBs must be configured before any hybrids can be powered.
 
-\section{SVT Cooling}
+\section{Cooling and Interlocks}
 The SVT cooling system, summarized in Table~\ref{tab:cooling} and Figure~\ref{fig:cooling_diagram}, controls the temperature of the sensors and removes heat dissipated by the electronics. 
 %===================
 \begin{table}[ht]
@@ -131,67 +131,65 @@ Since the SVT is in vacuum, the cooling system is key for the safety and perform
 
 The cooling loop for the sensor modules is connected to a Julabo Chiller, Model Presto A80, which will be set at -30 $^\circ$C. The heat transfer fluid is HFE-7000, a Fluorinert engineered fluid long used as heat transfer media for cooling applications. A bypass valve is placed at the chiller to manually adjust the mass flow. The inlet and the outlet lines pass through flanges on the detector vacuum box, where they are split after the feed trough to provide cooling in series to the top and the bottom parts of the detector. The cooling pipes in vacuum are flexible metal hoses from the vacuum feed through to the detector, while the cooling lines built in the detector are 0.25" rigid copper pipe. The flexible lines are brazed on one end to the rigid copper pipes of the detectors and connected with Swagelok fittings to the vacuum feedthroughs on the other end. The cooling feed through have a ceramic transition spool to insulate electrically the cooling line from the vacuum box. Dielectric fittings to break the electrical continuity of the cooling loop are placed outside the vacuum.  The drain ports are placed in proximity of the cooling feedthroughs together with two release valves, on the main supply and the main return line.
 In addition to the filter of the chiller, a second filter is located on the main supply line. A check valve is at the end of the main return line, just before the bypass. The estimated operating mass flow of the system without bypass is ~ 10 g/s, providing 5 g/s per cooling channel with a pressure drop ~1 bar.  The cooling loop inside vacuum is pneumatically tested up to 20 bars without showing any sign of failure.
-\chapter{Procedures}
 
-\section{Turning the SVT power and bias ON}
+All the instrumentation to control the cooling system will be placed in air, close to the chillers, with an identical layout for the two, as shown in Figures~\ref{fig:cooling_diagram}. 
+
+One mechanical pressure dial gauge is located after the bypass, on the main supply line. Two Pt100 temperature sensors are located at the inlet and the outlet of the chiller. A paddlewheel flow meter located after the bypass provide the value of the flow going to the detector. A solenoid valve after the flow meter is stopping the cooling flow when requested by the slow control system, like in case of leaks. The temperature sensors and the flow meter are interfaced with the Slow Control as diagnostic, while the solenoid valve is interlocked. Additional diagnostic is available through the temperature sensors built-in the SVT modules and the functional parameters of the chillers like set point pump pressure, mass flow which are controlled through an RS232 software interface.
 
 
-To power ON all of the SVT follow this procedure:
-\begin{enumerate}
-\item Turn on SVT FEB Power
-\begin{enumerate}
-\item 
-Make sure that the SVT and FEB chillers are {\sc ON} and {\sc OK}, and the PLC interlock is enabled and OK. See Sec.~\ref{sec:svt_cooling} for operation of the cooling system.
-\item
-Find the SVT FEB Power Control GUI shown in Fig.~\ref{fig:svt_FrontEnd} (see~\ref{sec:monitoring_power} to restart if not running)
-\item
-In the {\sc ALL FEB CONTROL} section at the top, press the {\sc On} switch marked {\sc DIGI}. Wait until the corresponding status indicator turns {\sc GREEN} for every one of the ten FEBs, and no alarms go off.
-\item
-Repeat for {\sc ANAP} and {\sc ANAN}.
-\item
-Currents and temperature should start to update on the power and temperature GUI for the FEBs at this point. Check that values are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
-\end{enumerate}
+\subsection{Interlocks}
+\label{sec:svt_power_monitoring_alarm_interlocks}
 
-\item Turn on SVT Flange Power
-\begin{enumerate}
-\item
-Find the SVT Flange Power Control GUI, see Fig.~\ref{fig:svt_Flange}  (see~\ref{sec:monitoring_power} to restart if not running).
-\item
-In the {\sc ALL SVT FLANGES} section at the bottom, press the {\sc On} switch. Wait until the status indicator turns {\sc GREEN} for every one of the four flange boards, and no alarms go off.
-\item
-Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
-\end{enumerate}
+To safely operate the SVT, the power supplies are included in an interlock system that triggers a fast shutdown of the power supply crate based on a set of conditions. A schematic view of the interlock system that triggers a SVT power supply interlock signal is shown in Fig.~\ref{fig:svt_interlock_diagram}. 
+\begin{figure}
+\includegraphics[width=10cm]{svt_interlock_diagram}
+\caption{Diagram of the SVT interlocks.\label{fig:svt_interlock_diagram}}
+\end{figure}
+The interlock system is based on an Allen-Bradley PLC that receives input signals and performs the necessary logic to issue an interlock signal. The interlock signal that triggers a fast shutdown of the SVT power supplies are:
+\begin{itemize}
+\item Hybrid and front end board temperature
+\item Input and output coolant temperature of the SVT hybrid and front end board cooling loops.
+\item Coolant fluid pressure in the SVT hybrid and front end board cooling loops.
+\item Chiller setting and status of the SVT and hybrid and front end board chillers.
+\item Signal from the fast shutdown system of the accelerator. 
+\end{itemize}
+ Each power control interface (flange board, front-end board, hybrid, bias) shows the status of the interlock signal that allows each system to be powered. 
 
-\item Turn on SVT High Voltage Bias
-\begin{enumerate}
-\item
-Find the SVT High Voltage Bias Control GUI shown in Fig.~\ref{fig:svt_BIAS} (see~\ref{sec:monitoring_power} to restart if not running).
-\item
-Check that the {\sc Voltage Setpoint Readback} column reads 180V for every channel. If not, call the SVT expert.
-\item
-Press the {\sc On} switch marked {\sc SVT BIAS ALL ON/OFF}.
-\item
-Wait until all status indicators turn {\sc GREEN} and no alarms go off.
-\end{enumerate}
+The solenoid valves are interlocked to mitigate any leaks in the cooling system. 
+If the flow meter in either cooling loop detects low flow, the valve at that chiller's outlet closes to prevent coolant from being pumped out of a possible leak in that loop. 
+If the vacuum gauge detects a loss of vacuum, both solenoid valves close in case the vacuum loss is due to a coolant leak inside vacuum.
 
-\item Turn on SVT Hybrid Power
-\begin{enumerate}
-\item
-Go to the DAQ GUI and do a {\sc download} with the normal HPS configuration. This configures the SVT FEB which allows the powering of the hybrids. Use the DAQ operations manual if needed. 
-\item 
-Find the SVT Hybrid GUI in Fig.~\ref{fig:svt_Status_Main} (see~\ref{sec:monitoring_power} to restart if not running).
-\item
-Press the {\sc On} switch marked {\sc All hybrids ON/OFF} to turn on power to the entire SVT.
-\item
-Wait until all status indicators turn {\sc GREEN} and no alarms go off.
-\item
-Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
-\end{enumerate}
-\end{enumerate}
 
-\chapter{Controls}
+\section{Motion}
+Figure~\ref{fig:motion} shows the SVT Motion System schematically. The top/bottom of each SVT support plate has three sensor layers (L1, L2, L3) and a wire frame, supported on a bearing at one end and connected to a rod attached to a linear stage at the other end. The linear stage is moved by a stepper motor through the EPICS slow controls system. In the nominal run position, the support plates are parallel to the beam and the Silicon physical edge is at 0.5 (L1), 2.0 (L2), and 3.5 mm (L3) from the beam. The support plates can be retracted by 1.3 degrees. Figure~\ref{fig:beam} shows the beam's eye view of the wires and the L1 sensor edge in the nominal run position and in the fully retracted position.
 
-\section{Power and high voltage bias monitoring}
+The stepper motor controller is Newport XPS controller, and is different from the stepper motor controllers found in Hall B. The motor control is based on an optical encoder. Stage movement is precisely calibrated, and re-calibration is not necessary. Since the encoder has no knowlege of the actual stage position when the controller power is turned on, the linear stage must move to a reference point to establish its calibration (called ``homing''). A switch is located at the fully retracted position for this purpose. 
+
+Three vertical coordinates are used to locate the stage, the horizontal wire and the layer 1 sensor physical edge. The stage coordinate is y(stage) = 0 mm at the fully retracted position and y(stage) = 18.89 mm at the nominal run position for both top and bottom stages. The wire and sensor edge coordinates are measured relative to the nominal beam position (positive y is up), and are given in terms of y(stage) as,
+
+\begin{itemize}
+\item
+y(top-wire) = -0.482 $\cdot$ y(stage) + 1.76 mm,
+\item
+y(top-si) = -0.391 $\cdot$ y(stage) + 7.89 mm,
+\item
+y(bottom-wire) = +0.463 $\cdot$ y(stage) - 1.39 mm,
+\item
+y(bottom-si) = +0.372 $\cdot$ y(stage) - 7.53 mm.
+\end{itemize}
+
+As the coordinate transformation is done automatically, all you need to specify is the position of the wire or Si sensor edge to operate the SVT Mover and the SVT Wire Scanner. 
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=15cm]{WireFrame2.eps}
+\caption{Beam's eye view of wires and and L1 sensor edge}
+\label{fig:beam}
+\end{figure}
+
+\chapter{Controls and monitoring}
+
+\section{Voltages}
 \label{sec:monitoring_power}
 The SVT power and bias as well as alarms are monitored with five principal GUI's. To bring up the GUIs follow these procedures (see slow control manual for more information):
 
@@ -273,60 +271,46 @@ Below is a description of each of the GUI's.
 
 
 
-\subsubsection{Alarms}
+
+
+\section{SVT Cooling}
+
+As described above, the following parameters are monitored through the EPICS slow controls system:
+
+\begin{itemize}
+	\item Flow, inlet temperature, and outlet temperature for both cooling loops (read through Allen-Bradley PLC)
+	\item On-board temperatures for SVT modules and front end boards (read through SVT DAQ)
+	\item Chiller status and setpoints (read through RS-232 interfaces of chillers)
+\end{itemize}
+
+These are displayed on a monitoring GUI (Figure \ref{fig:cooling_display}). The SVT alarm handler has alarms defined for the temperatures: see the SVT monitoring section.
+
+\begin{figure*}[t]
+	\begin{center}
+		\includegraphics[width=0.8\textwidth]{Epics_svt_temps}
+		\caption{SVT temperature GUI from 2012 test run. An updated GUI (work in progress) will show flow and temperature readings from the cooling loop, and chiller status.}
+		\label{fig:cooling_display}
+	\end{center}
+\end{figure*}
+
+\section{Motion}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=15cm]{motion.eps}
+\caption{SVT Motion System}
+\label{fig:motion}
+\end{figure}
+
+\chapter{Procedures}
+
+\section{Response to Alarms}
 The alarm handling is handled by the ALH extension to EPICS that is widely used at JLab. The SVT alarm handling GUI is shown in Fig.~\ref{fig:svt_alarm_gui}. It is tree-based with each level showing more detailed info of what alarm has gone off. 
 \begin{figure}
 \includegraphics[width=12cm]{svt_alarm_gui}
 \caption{SVT alarm handler GUI.\label{fig:svt_alarm_gui}}
 \end{figure}
-The top level branches are:
-\begin{itemize}
 
-\item {\bf bias:} High voltage bias
-\begin{itemize}
-\item Condition: voltage read-back range
-\end{itemize}
-\item {\bf lv} 
-\begin{itemize}
-\item {\bf hybrid:} Hybrid power
-\begin{itemize}
-\item Condition: voltage read-back range
-\item Condition: voltage measured range
-\item Condition: current range
-\end{itemize}
-
-\item {\bf fe:} Front end power
-\begin{itemize}
-\item Condition: voltage read-back range
-\item Condition: voltage measured range
-\item Condition: current range
-\end{itemize}
-\item {\bf flange:} Flange power
-\begin{itemize}
-\item Condition: voltage read-back range
-\item Condition: current range
-\end{itemize}
-\end{itemize}
-\item {\bf temp}
-\begin{itemize}
-\item {\bf hybrid:} Hybrid temperature
-\begin{itemize}
-\item Condition: temperature range
-\end{itemize}
-\item {\bf fe:} Front end board temperature
-\begin{itemize}
-\item Condition: temperature range
-\end{itemize}
-\item {\bf cool\_svt:} SVT cooling loop temperature
-\begin{itemize}
-\item Condition: temperature range
-\end{itemize}
-\item {\bf cool\_fe:} Front end board cooling loop temperature
-\begin{itemize}
-\item Condition: temperature range
-\end{itemize}
-\end{itemize}
-\end{itemize}
 Each level has two buttons: a {\sc guidance} button which opens a pop up display with more information and an {\sc action} button which acknowledges the alarm. 
 
 \begin{verbatim}
@@ -336,50 +320,68 @@ In case any error please contact SVT expert.
 Be ready to report what alarm has gone off.
 \end{verbatim}
 
-More information about the alarm hander can be found in the slow control manual. 
+More information about the alarm handler can be found in the slow control manual. 
 
-\subsubsection{Interlocks}
-\label{sec:svt_power_monitoring_alarm_interlocks}
+\section{Voltages}
+\label{sec:proc_voltages}
+\subsection{Turning the SVT power and bias ON}
 
-To safely operate the SVT, the power supplies are included in an interlock system that triggers a fast shutdown of the power supply crate based on a set of conditions. A schematic view of the interlock system that triggers a SVT power supply interlock signal is shown in Fig.~\ref{fig:svt_interlock_diagram}. 
-\begin{figure}
-\includegraphics[width=10cm]{svt_interlock_diagram}
-\caption{Diagram of the SVT interlocks.\label{fig:svt_interlock_diagram}}
-\end{figure}
-The interlock system is based on an Allen-Bradley PLC that receives input signals and performs the necessary logic to issue an interlock signal. The interlock signal that triggers a fast shutdown of the SVT power supplies are:
-\begin{itemize}
-\item Hybrid and front end board temperature
-\item Input and output coolant temperature of the SVT hybrid and front end board cooling loops.
-\item Coolant fluid pressure in the SVT hybrid and front end board cooling loops.
-\item Chiller setting and status of the SVT and hybrid and front end board chillers.
-\item Signal from the fast shutdown system of the accelerator. 
-\end{itemize}
- Each power control interface (flange board, front-end board, hybrid, bias) shows the status of the interlock signal that allows each system to be powered. 
 
-In case an the interlock system issues an interlock signal it triggers a fast shutdown of the affected supplies or the entire crate using the {\sc FAST\_SHUTDOWN} feature of the MPOD controller in the crate. Power will shut down ignoring any ramp-down parameters. To recover  the power supplies from an interlock signal:
+To power ON all of the SVT follow this procedure:
 \begin{enumerate}
-\item Find out which input triggered the interlock signal.
-\item See if the problem can be understood and corrected easily. Otherwise call the SVT expert.
-\item If possible, mitigate and reset the interlock signal and the power can be restored as described above in Sec.~\ref{sec:svt_power_control}.
+\item Turn on SVT FEB Power
+\begin{enumerate}
+\item 
+Make sure that the SVT and FEB chillers are {\sc ON} and {\sc OK}, and the PLC interlock is enabled and OK. See Sec.~\ref{sec:proc_cooling} for operation of the cooling system.
+\item
+Find the SVT FEB Power Control GUI shown in Fig.~\ref{fig:svt_FrontEnd} (see~\ref{sec:monitoring_power} to restart if not running)
+\item
+In the {\sc ALL FEB CONTROL} section at the top, press the {\sc On} switch marked {\sc DIGI}. Wait until the corresponding status indicator turns {\sc GREEN} for every one of the ten FEBs, and no alarms go off.
+\item
+Repeat for {\sc ANAP} and {\sc ANAN}.
+\item
+Currents and temperature should start to update on the power and temperature GUI for the FEBs at this point. Check that values are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
 \end{enumerate}
 
+\item Turn on SVT Flange Power
+\begin{enumerate}
+\item
+Find the SVT Flange Power Control GUI, see Fig.~\ref{fig:svt_Flange}  (see~\ref{sec:monitoring_power} to restart if not running).
+\item
+In the {\sc ALL SVT FLANGES} section at the bottom, press the {\sc On} switch. Wait until the status indicator turns {\sc GREEN} for every one of the four flange boards, and no alarms go off.
+\item
+Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
+\end{enumerate}
 
-\section{SVT Cooling}
+\item Turn on SVT High Voltage Bias
+\begin{enumerate}
+\item
+Find the SVT High Voltage Bias Control GUI shown in Fig.~\ref{fig:svt_BIAS} (see~\ref{sec:monitoring_power} to restart if not running).
+\item
+Check that the {\sc Voltage Setpoint Readback} column reads 180V for every channel. If not, call the SVT expert.
+\item
+Press the {\sc On} switch marked {\sc SVT BIAS ALL ON/OFF}.
+\item
+Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+\end{enumerate}
 
-\subsection{Control and Operations} \label{sec:svt_cooling}
+\item Turn on SVT Hybrid Power
+\begin{enumerate}
+\item
+Go to the DAQ GUI and do a {\sc download} with the normal HPS configuration. This configures the SVT FEB which allows the powering of the hybrids. Use the DAQ operations manual if needed. 
+\item 
+Find the SVT Hybrid GUI in Fig.~\ref{fig:svt_HybridLV} (see~\ref{sec:monitoring_power} to restart if not running).
+\item
+Press the {\sc On} switch marked {\sc All hybrids ON/OFF} to turn on power to the entire SVT.
+\item
+Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+\item
+Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
+\end{enumerate}
+\end{enumerate}
 
-All the instrumentation to control the cooling system will be placed in air, close to the chillers, with an identical layout for the two, as shown in Figures~\ref{fig:cooling_diagram} and~\ref{fig:cooling_manifold} . 
-%=======================
-\begin{figure}[htbp]
-\begin{center}
-    \includegraphics[width=\textwidth]{cooling_manifold}
-\caption{The instrumented SVT cooling manifold.}
-\label{fig:cooling_manifold}
-\end{center}
-\end{figure}
-%=======================
-One mechanical pressure dial gauge is located after the bypass, on the main supply line. Two Pt100 temperature sensors are located at the inlet and the outlet of the chiller. A paddlewheel flow meter located after the bypass provide the value of the flow going to the detector. A solenoid valve after the flow meter is stopping the cooling flow when requested by the slow control system, like in case of leaks. The temperature sensors and the flow meter are interfaced with the Slow Control as diagnostic, while the solenoid valve is interlocked. Additional diagnostic is available through the temperature sensors built-in the SVT modules and the functional parameters of the chillers like set point pump pressure, mass flow which are controlled through an RS232 software interface.
-
+\section{Cooling and Interlocks}
+\label{sec:proc_cooling}
 \textbf{EXPERTS ONLY: }The startup procedure is as follows.
 When the SVT detector is under vacuum, the cooling must be switched on before the detector is powered, while the cooling is only recommended if the detector is in air. This condition is logically interlocked in the Slow Control. At the beginning the chiller is switched on and the by-pass valve is adjusted to get sufficient cooling flow, ~10 g/s. Once the flow is stable and the temperature of the Silicon sensors is close to the chiller set point, the Power Supplies can be switched on. 
 
@@ -395,69 +397,14 @@ contact the expert immediately.
 
 \textbf{Cooling leakage outside vacuum:} \\ More fittings are potentially susceptible, although the consequences are less severe. The same interlocks apply as in the previous case, with the exception of loss of vacuum that stops the beam. The list of actions is the same but the beam does not need to be stopped.
 
-\subsection{Monitoring, Alarms and Interlocks}
-As described above, the following parameters are monitored through the EPICS slow controls system:
+In case an the interlock system issues an interlock signal it triggers a fast shutdown of the affected supplies or the entire crate using the {\sc FAST\_SHUTDOWN} feature of the MPOD controller in the crate. Power will shut down ignoring any ramp-down parameters. To recover  the power supplies from an interlock signal:
+\begin{enumerate}
+\item Find out which input triggered the interlock signal.
+\item See if the problem can be understood and corrected easily. Otherwise call the SVT expert.
+\item If possible, mitigate and reset the interlock signal and the power can be restored as described above in Sec.~\ref{sec:proc_voltages}.
+\end{enumerate}
 
-\begin{itemize}
-	\item Flow, inlet temperature, and outlet temperature for both cooling loops (read through Allen-Bradley PLC)
-	\item On-board temperatures for SVT modules and front end boards (read through SVT DAQ)
-	\item Chiller status and setpoints (read through RS-232 interfaces of chillers)
-\end{itemize}
-
-These are displayed on a monitoring GUI (Figure \ref{fig:cooling_display}). The SVT alarm handler has alarms defined for the temperatures: see the SVT monitoring section.
-
-The solenoid valves are interlocked to mitigate any leaks in the cooling system. 
-If the flow meter in either cooling loop detects low flow, the valve at that chiller's outlet closes to prevent coolant from being pumped out of a possible leak in that loop. 
-If the vacuum gauge detects a loss of vacuum, both solenoid valves close in case the vacuum loss is due to a coolant leak inside vacuum.
-
-Other systems use the cooling system's flow and temperature sensors as inputs to their interlocks; see the Slow Control Operations Manual.
-
-\begin{figure*}[t]
-	\begin{center}
-		\includegraphics[width=0.8\textwidth]{Epics_svt_temps}
-		\caption{SVT temperature GUI from 2012 test run. An updated GUI (work in progress) will show flow and temperature readings from the cooling loop, and chiller status.}
-		\label{fig:cooling_display}
-	\end{center}
-\end{figure*}
-
-
-\section{SVT Motion System}
-\label{sec:svtmotion}
-
-\subsection{System Description}
-
-Figure~\ref{fig:motion} shows the SVT Motion System schematically. The top/bottom of each SVT support plate has three sensor layers (L1, L2, L3) and a wire frame, supported on a bearing at one end and connected to a rod attached to a linear stage at the other end. The linear stage is moved by a stepper motor through the EPICS slow controls system. In the nominal run position, the support plates are parallel to the beam and the Silicon physical edge is at 0.5 (L1), 2.0 (L2), and 3.5 mm (L3) from the beam. The support plates can be retracted by 1.3 degrees. Figure~\ref{fig:beam} shows the beam's eye view of the wires and the L1 sensor edge in the nominal run position and in the fully retracted position.
-
-The stepper motor controller is Newport XPS controller, and is different from the stepper motor controllers found in Hall B. The motor control is based on an optical encoder. Stage movement is precisely calibrated, and re-calibration is not necessary. Since the encoder has no knowlege of the actual stage position when the controller power is turned on, the linear stage must move to a reference point to establish its calibration (called ``homing''). A switch is located at the fully retracted position for this purpose. 
-
-Three vertical coordinates are used to locate the stage, the horizontal wire and the layer 1 sensor physical edge. The stage coordinate is y(stage) = 0 mm at the fully retracted position and y(stage) = 18.89 mm at the nominal run position for both top and bottom stages. The wire and sensor edge coordinates are measured relative to the nominal beam position (positive y is up), and are given in terms of y(stage) as,
-
-\begin{itemize}
-\item
-y(top-wire) = -0.482 $\cdot$ y(stage) + 1.76 mm,
-\item
-y(top-si) = -0.391 $\cdot$ y(stage) + 7.89 mm,
-\item
-y(bottom-wire) = +0.463 $\cdot$ y(stage) - 1.39 mm,
-\item
-y(bottom-si) = +0.372 $\cdot$ y(stage) - 7.53 mm.
-\end{itemize}
-
-As the coordinate transformation is done automatically, all you need to specify is the position of the wire or Si sensor edge to operate the SVT Mover and the SVT Wire Scanner. 
-
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=15cm]{motion.eps}
-\caption{SVT Motion System}
-\label{fig:motion}
-\end{figure}
-
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=15cm]{WireFrame2.eps}
-\caption{Beam's eye view of wires and and L1 sensor edge}
-\label{fig:beam}
-\end{figure}
+\section{Motion}
 
 \subsection{SVT Mover Operations}
 
