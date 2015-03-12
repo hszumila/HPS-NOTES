@@ -424,7 +424,7 @@ Make sure that the SVT and FEB chillers are \textbf{ON} and \textbf{OK}, and the
 \item
 The flange power should be OFF. Go to the flange power GUI and turn if OFF (see below) .
 \item
-Open the the FEB Power GUI (svtFebMain.adl) shown in Fig.~\ref{fig:svt_FrontEnd}. See~\ref{sec:monitoring_power} to restart GUI if not running.
+Open the the FEB Power GUI (svtFebMain.adl) shown in Fig.~\ref{fig:svtFebMain}. See~\ref{sec:monitoring_power} to restart GUI if not running.
 \item
 At the top of the GUI: press the \textbf{On} switch marked \textbf{DIGI}. Wait until the corresponding channel status indicator turns \textbf{GREEN} for all ten FEBs. 
 \item
@@ -435,7 +435,7 @@ Repeat for \textbf{ANAP} and \textbf{ANAN}.
 \item Turn on SVT Flange Power
 \begin{enumerate}
 \item
-Open the to SVT Flange Power Control GUI, see Fig.~\ref{fig:svt_Flange}  (see~\ref{sec:monitoring_power} to restart if not running).
+Open the SVT Flange Power Control GUI, see Fig.~\ref{fig:svtFlange}  (see~\ref{sec:monitoring_power} to restart if not running).
 \item
 Press the \textbf{ON} switch for the \textbf{ALL SVT FLANGES} section at the bottom of the GUI. Wait until the status indicator turns {\color{green} \textbf{GREEN}}  for every one of the four flange boards, and check for alarms after currents stabilized. 
 \end{enumerate}
@@ -462,7 +462,7 @@ If there is a DPM that has a rate larger than one per minute recycle, try to rec
 \item
 Make sure the FEBs and flange are powered and OK following the above procedure.
 \item 
-Find the SVT Hybrid GUI (svtHybrid.adl) in Fig.~\ref{fig:svt_Status_Main}.
+Find the SVT Hybrid GUI (svtHybrid.adl) in Fig.~\ref{fig:svtHybrid}.
 Wait until all status indicators turn \textbf{GREEN}, currents are seen updating and no alarms go off.\newline
 NOTE: at this time this might take up to 1minute during which the SVT DAQ GUIs may be in a bad state. If it takes more than 1 minute call the SVT expert.
 \item
@@ -478,7 +478,7 @@ Check hybrids currents and temperatures are within range and no alarms go off.
 \item
 Make sure that beam conditions and SVT position has granted permission to turn on HV. \textbf{ask the shift leader if you are not sure}.
 \item
-Find the SVT High Voltage Bias Control GUI (svtBiasMain.adl) shown in Fig.~\ref{fig:svt_BIAS} (see~\ref{sec:monitoring_power} to restart if not running).
+Find the SVT High Voltage Bias Control GUI (svtBiasMain.adl) shown in Fig.~\ref{fig:svtBias} (see~\ref{sec:monitoring_power} to restart if not running).
 \item
 Check that the \textbf{Voltage Setpoint Readback} column reads 180V for every channel. If not, call the SVT expert.
 \item
@@ -498,7 +498,7 @@ To power OFF all of the SVT follow this procedure:
 \item 
 Make sure that the SVT and FEB chillers are \textbf{ON} and \textbf{OK}, and the PLC interlock is enabled and OK. See Sec.~\ref{sec:proc_cooling} for operation of the cooling system.
 \item
-Find the SVT FEB Power Control GUI shown in Fig.~\ref{fig:svt_FrontEnd} (see~\ref{sec:monitoring_power} to restart if not running)
+Find the SVT FEB Power Control GUI shown in Fig.~\ref{fig:svtFebMain} (see~\ref{sec:monitoring_power} to restart if not running)
 \item
 In the \textbf{ALL FEB CONTROL} section at the top, press the three \textbf{Off} switches marked \textbf{DIGI}, \textbf{ANAP} and \textbf{ANAN}.
 Wait until all status indicators turn \textbf{RED} for every one of the ten FEBs, and no alarms go off.
@@ -507,7 +507,7 @@ Wait until all status indicators turn \textbf{RED} for every one of the ten FEBs
 \item Turn off SVT Flange Power
 \begin{enumerate}
 \item
-Find the SVT Flange Power Control GUI, see Fig.~\ref{fig:svt_Flange}  (see~\ref{sec:monitoring_power} to restart if not running).
+Find the SVT Flange Power Control GUI, see Fig.~\ref{fig:svtFlange}  (see~\ref{sec:monitoring_power} to restart if not running).
 \item
 In the \textbf{ALL SVT FLANGES} section at the bottom, press the \textbf{Off} switch.
 Wait until the status indicator turns \textbf{RED} for every one of the four flange boards, and no alarms go off.
@@ -518,7 +518,7 @@ Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_ala
 \item Turn off SVT High Voltage Bias
 \begin{enumerate}
 \item
-Find the SVT High Voltage Bias Control GUI shown in Fig.~\ref{fig:svt_BIAS} (see~\ref{sec:monitoring_power} to restart if not running).
+Find the SVT High Voltage Bias Control GUI shown in Fig.~\ref{fig:svtBias} (see~\ref{sec:monitoring_power} to restart if not running).
 \item
 Press the \textbf{Off} switch marked \textbf{SVT BIAS ALL ON/OFF}.
 \item
