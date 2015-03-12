@@ -2,6 +2,7 @@
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{url}
+\usepackage{color}
 %\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
 %\geometry{letterpaper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
@@ -105,136 +106,232 @@ Also, the FEBs must be configured before any hybrids can be powered.
 
 To power ON all of the SVT follow this procedure:
 \begin{enumerate}
+
 \item Turn on SVT FEB Power
 \begin{enumerate}
 \item 
 Make sure that the SVT and FEB chillers are {\sc ON} and {\sc OK}, and the PLC interlock is enabled and OK. See Sec.~\ref{sec:svt_cooling} for operation of the cooling system.
+
 \item
-Find the SVT FEB Power Control GUI shown in Fig.~\ref{fig:svt_FrontEnd} (see~\ref{sec:monitoring_power} to restart if not running)
+The flange power should be OFF. Go to the flange power GUI and turn if OFF (see below) .
 \item
-In the {\sc ALL FEB CONTROL} section at the top, press the {\sc On} switch marked {\sc DIGI}. Wait until the corresponding status indicator turns {\sc GREEN} for every one of the ten FEBs, and no alarms go off.
+Open the the FEB Power GUI (svtFebMain.adl) shown in Fig.~\ref{fig:svt_FrontEnd}. See~\ref{sec:monitoring_power} to restart GUI if not running.
+\item
+At the top of the GUI: press the {\sc On} switch marked {\sc DIGI}. Wait until the corresponding channel status indicator turns {\sc GREEN} for all ten FEBs. 
 \item
 Repeat for {\sc ANAP} and {\sc ANAN}.
-\item
-Currents and temperature should start to update on the power and temperature GUI for the FEBs at this point. Check that values are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
 \end{enumerate}
+
 
 \item Turn on SVT Flange Power
 \begin{enumerate}
 \item
-Find the SVT Flange Power Control GUI, see Fig.~\ref{fig:svt_Flange}  (see~\ref{sec:monitoring_power} to restart if not running).
+Open the to SVT Flange Power Control GUI, see Fig.~\ref{fig:svt_Flange}  (see~\ref{sec:monitoring_power} to restart if not running).
 \item
-In the {\sc ALL SVT FLANGES} section at the bottom, press the {\sc On} switch. Wait until the status indicator turns {\sc GREEN} for every one of the four flange boards, and no alarms go off.
-\item
-Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
+Press the {\sc ON} switch for the {\sc ALL SVT FLANGES} section at the bottom of the GUI. Wait until the status indicator turns {\color{green} {\sc GREEN}}  for every one of the four flange boards, and check for alarms after currents stabilized. 
 \end{enumerate}
+
+
+
+\item Checklist  that FEBs are powered correctly:
+\begin{enumerate}
+\item
+Open the SVT DAQ IOC Status GUI (svtDaqIOCStatus.adl) and check that all IOC report OK status.
+\item
+Open the SVT temperature GUI (svtTemp.adl) and check that all 10 FEB show reasonable temperatures and that they are updating about every second.
+\item
+Open the DPM Link Status GUI (svtDpmLinkStatus.adl) and look for incrementing counters on any of the columns. \newline 
+If there is a DPM that has a rate larger than one per minute recycle, try to recycle the flange power (waiting 10s before turning on again). You may need to recycle this up to four times.
+\end{enumerate}
+
+
+
+
+
+\item Turn on SVT Hybrid Power
+\begin{enumerate}
+\item
+Make sure the FEBs and flange are powered and OK following the above procedure.
+\item 
+Find the SVT Hybrid GUI (svtHybrid.adl) in Fig.~\ref{fig:svt_Status_Main}.
+\item
+Press the {\sc On} switch marked {\sc All hybrids ON/OFF} to turn on power to the entire SVT.
+\item
+Wait until all status indicators turn {\sc GREEN}, currents are seen updating and no alarms go off.\newline
+NOTE: at this time this might take up to 1minute during which the SVT DAQ GUIs may be in a bad state. If it takes more than 1 minute call the SVT expert.
+\item
+Check hybrids currents and temperatures are within range and no alarms go off.
+\end{enumerate}
+
+
+
+
 
 \item Turn on SVT High Voltage Bias
 \begin{enumerate}
 \item
-Find the SVT High Voltage Bias Control GUI shown in Fig.~\ref{fig:svt_BIAS} (see~\ref{sec:monitoring_power} to restart if not running).
+Make sure that beam conditions and SVT position has granted permission to turn on HV. {\bf ask the shift leader if you are not sure}.
+\item
+Find the SVT High Voltage Bias Control GUI (svtBiasMain.adl) shown in Fig.~\ref{fig:svt_BIAS} (see~\ref{sec:monitoring_power} to restart if not running).
 \item
 Check that the {\sc Voltage Setpoint Readback} column reads 180V for every channel. If not, call the SVT expert.
 \item
 Press the {\sc On} switch marked {\sc SVT BIAS ALL ON/OFF}.
 \item
-Wait until all status indicators turn {\sc GREEN} and no alarms go off.
+Wait until all status indicators turn {\color{green} {\sc GREEN}} and no alarms go off.
 \end{enumerate}
 
-\item Turn on SVT Hybrid Power
-\begin{enumerate}
-\item
-Go to the DAQ GUI and do a {\sc download} with the normal HPS configuration. This configures the SVT FEB which allows the powering of the hybrids. Use the DAQ operations manual if needed. 
-\item 
-Find the SVT Hybrid GUI in Fig.~\ref{fig:svt_Status_Main} (see~\ref{sec:monitoring_power} to restart if not running).
-\item
-Press the {\sc On} switch marked {\sc All hybrids ON/OFF} to turn on power to the entire SVT.
-\item
-Wait until all status indicators turn {\sc GREEN} and no alarms go off.
-\item
-Check that currents are within range (see Sec.~\ref{sec:svt_power_monitoring_alarm_interlocks} below). If not, follow the procedure outlined in that section.
+
 \end{enumerate}
-\end{enumerate}
+
+
+
 
 \subsection{Monitoring, Alarms and Interlocks}
 
 \subsubsection{Power and high voltage bias monitoring}
 \label{sec:monitoring_power}
-The SVT power and bias as well as alarms are monitored with five principal GUI's. To bring up the GUIs follow these procedures (see slow control manual for more information):
+The SVT power and bias as well as alarms are monitored through several GUI's. All GUI's are accessible from the main HPS control screen. To start it:
 
 \begin{enumerate}
-\item Log into the {\sc clon01} computer in the counting house.  
-\item Open a terminal and issue {\sc hps\_epics} command to open the main HPS GUI.
+\item Log into the {\sc clonioc1} computer in the counting house.
+\item Open a terminal and issue \texttt{hps\_epics dev} command to open the main HPS GUI. Figure~\ref{fig:hps_epics_svt} show the SVT part of the GUI open.
 \item Each of the individual GUIs can be opened by clicking the appropriate button in the HPS main GUI that opened.
 \end{enumerate}
 
+\begin{figure}
+\includegraphics[width=4cm]{epics_dev_svt.png}
+\caption{HPS EPICS main GUI. \label{fig:hps_epics_svt}}
+\end{figure}
 
-Below is a description of each of the GUI's.
+
+Below is a description of each of the GUI's in the list.
+
 \begin{itemize}
-\item {\bf Main status GUI} in Fig.~\ref{fig:svt_Status_Main}.
+\item {\bf DAQ IOC Status} in Fig.~\ref{fig:svtDaqIOCStatus}.
 \begin{itemize}
-\item Monitoring: all measured currents from hybrids. 
-\item Control: ON/OFF switch for top and bottom half separately as well as individual hybrids.
-\item Links: {\sc BIAS}, {\sc FE Low Voltages} and {\sc Flange Boards} buttons open up the GUI for these objects (see below). There is also links to the  individual hybrid power control and monitoring GUI discussed below (EXPERT only).
+\item Monitoring: status and error codes from all SVT DAQ IOCs.
 \end{itemize}
 
-\item {\bf Hybrid GUI} in Fig.~\ref{fig:svt_HybridLV} (EXPERT ONLY).
+\begin{figure}
+\includegraphics[width=9cm]{svtDaqIOCStatus.png}
+\caption{DAQ IOC Status GUI. \label{fig:svtDaqIOCStatus}}
+\end{figure}
+
+\item {\bf DPM Status} in Fig.~\ref{fig:svtDpmStatus}.
 \begin{itemize}
-\item Monitoring: Interlock status for hybrid power.
+\item Monitoring: run state and event counts  from the data processing nodes in the SVT DAQ.
+\end{itemize}
+
+\begin{figure}
+\includegraphics[width=10cm]{svtDpmStatus.png}
+\caption{DPM state GUI. \label{fig:svtDpmStatus}}
+\end{figure}
+
+
+\item {\bf DPM  Link Status} in Fig.~\ref{fig:svtDpmLinkStatus}.
+\begin{itemize}
+\item Monitoring: link errors for each of the data processing nodes in the SVT DAQ.
+\end{itemize}
+
+\begin{figure}
+\includegraphics[width=14cm]{svtDpmLinkStatus.png}
+\caption{DPM link status GUI. \label{fig:svtDpmLinkStatus}}
+\end{figure}
+
+
+\item {\bf Temperature} in Fig.~\ref{fig:svtTemp}.
+\begin{itemize}
+\item Monitoring: FEB (3 temperatures), 
+\item Monitoring: FEB cooling temperature on the supply and return at the PS magnet for the FEB and SVT chiller.
+\end{itemize}
+
+\begin{figure}
+\includegraphics[width=9cm]{svtTemp.png}
+\caption{Temperature GUI. \label{fig:svtTemp}}
+\end{figure}
+
+
+\item {\bf Hybrid GUI} in Fig.~\ref{fig:svtHybrid}.
+\begin{itemize}
 \item Monitoring: all measured voltage and currents from hybrids. 
-\item Control: ON/OFF switch for each of the three voltages for individual hybrids.
-\item Control: set point for the three voltages for individual hybrids.
+\item Monitoring: temperature from hybrids. 
+\item Control: ON/OFF switch for each of the three voltages for individual hybrids and all hybrids.
 \end{itemize}
 
-\item {\bf Flange Board GUI} in Fig.~\ref{fig:svt_Flange}.
+
+\begin{figure}
+\includegraphics[width=14cm]{svtHybrid.png}
+\caption{Hybrid power and temperature GUI. \label{fig:svtHybrid}}
+\end{figure}
+
+
+
+\item {\bf Hybrid Sync} in Fig.~\ref{fig:svtHybridSync}.
 \begin{itemize}
-\item Monitoring: Interlock status for flange board power.
-\item Monitoring: all  currents to the flange boards. 
-\item Control: ON/OFF switch for each flange board. 
-\item Control: Set point for voltage, trip and ramp values for each flange board (EXPERT ONLY).
+\item Monitoring: sync status for each hybrid.
+\item Monitoring: base and peak value of the sync pulse from each hybrid. (EXPERT ONLY). 
 \end{itemize}
 
-\item {\bf FEB GUI} in Fig.~\ref{fig:svt_FrontEnd}.
+
+\begin{figure}
+\includegraphics[width=14cm]{svtHybridSync.png}
+\caption{Hybrid sync GUI. \label{fig:svtHybridSync}}
+\end{figure}
+
+
+
+\item {\bf FEB Power GUI} in Fig.~\ref{fig:svtFebMain}.
 \begin{itemize}
-\item Monitoring: Interlock status for FEB power.
 \item Monitoring: all currents and voltages of the FEB.
+\item Control: ON/OFF switch for all FEB boards. 
 \item Control: ON/OFF switch for each FEB board. 
 \item Control: Set point for voltage, trip and ramp values for each flange board (EXPERT ONLY).
 \end{itemize}
 
+\begin{figure}
+\includegraphics[width=14cm]{svtFebMain.png}
+\caption{FEB power GUI. \label{fig:svtFebMain}}
+\end{figure}
 
-\item {\bf High voltage bias GUI} in Fig.~\ref{fig:svt_BIAS}.
+
+
+
+\item {\bf Flange power GUI} in Fig.~\ref{fig:svtFlange}.
 \begin{itemize}
-\item Monitoring: Interlock status for HV bias.
-\item Monitoring: all voltage set points for the SVT modules.
-\item Control: ON/OFF switch for all modules, each half and each module.  
+\item Monitoring: all  currents to the flange boards. 
+\item Control: ON/OFF switch for all flange boards. 
+\item Control: ON/OFF switch for each flange board. 
+\item Control: Set point for voltage, trip and ramp values for each flange board (EXPERT ONLY).
+\end{itemize}
+
+\begin{figure}
+\includegraphics[width=14cm]{svtFlange.png}
+\caption{Flange power GUI. \label{fig:svtFlange}}
+\end{figure}
+
+
+
+\item {\bf High voltage bias GUI} in Fig.~\ref{fig:svtBias}.
+\begin{itemize}
+\item Monitoring: all voltage set points for the SVT sensors.
+\item Control: ON/OFF switch for all sensors.
+\item Control: ON/OFF switch for each sensor.
 \item Control: Set point for voltage for all modules (EXPERT ONLY).
 \item Control: Set point for voltage and ramp values for each module (EXPERT ONLY).
 \end{itemize}
 
 
+\begin{figure}
+\includegraphics[width=14cm]{svtBias.png}
+\caption{High voltage bias GUI. \label{fig:svtBias}}
+\end{figure}
+
+
+
+
 \end{itemize}
 
-\begin{figure}
-\includegraphics[width=12cm]{svt_Flange.png}
-\caption{SVT Flange board power GUI.\label{fig:svt_Flange}}
-\end{figure}
-\begin{figure}
-\includegraphics[width=12cm]{svt_FrontEnd.png}
-\caption{SVT Front End Board power GUI.\label{fig:svt_FrontEnd}}
-\end{figure}
-\begin{figure}
-\includegraphics[width=12cm]{svt_Status_Main.png}
-\caption{SVT main status GUI.\label{fig:svt_Status_Main}}
-\end{figure}
-\begin{figure}
-\includegraphics[width=12cm]{svt_HybridLV.png}
-\caption{SVT hybrid GUI.\label{fig:svt_HybridLV}}
-\end{figure}
-\begin{figure}
-\includegraphics[width=12cm]{svt_BIAS.png}
-\caption{SVT high voltage bias GUI.\label{fig:svt_BIAS}}
-\end{figure}
 
 
 \subsubsection{Alarms}
