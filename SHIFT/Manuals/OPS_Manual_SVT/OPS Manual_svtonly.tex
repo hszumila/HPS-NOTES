@@ -145,6 +145,47 @@ One mechanical pressure dial gauge is located after the bypass, on the main supp
 
 
 
+\subsection{Sensors and inputs}
+\subsubsection*{FEB cooling loop}
+\begin{itemize}
+    \item To PLC: Flow switch (adjustable setpoint, set around 10 GPH with reference to flow meter) at chiller return
+    \item To PLC: 2x RTD on supply and return, near vacuum feedthroughs
+    \item Through SVT DAQ: temperature sensors on FEBs
+    \item From FEB chiller (via RS-232): temperature readout, status
+    \item Local readout only: flow meter, next to flow switch
+\end{itemize}
+\subsubsection*{SVT cooling loop}
+\begin{itemize}
+    \item To PLC: Flow switch (fixed setpoint, 0.25 GPM) at chiller return
+    \item To PLC: 2x RTD on supply and return, at manifold (before lines split to top and bottom halves of the SVT)
+    \item Through SVT DAQ: temperature sensors on hybrids
+    \item From SVT chiller (via RS-232): temperature readout, outlet pressure, status
+    \item Local readout only: 2x pressure gauges, on supply and return at manifold
+\end{itemize}
+
+The sensors with PLC or RS-232 readout are monitored through the EPICS slow controls system and displayed in the monitoring GUIs for the chillers and the PLC.
+The SVT alarm handler has alarms defined for the temperatures: see the SVT monitoring section.
+
+\subsection{Control outputs}
+The PLC and chillers can be controlled through EPICS. These control outputs can be used in PLC or EPICS interlocks.
+\subsubsection*{FEB cooling loop}
+\begin{itemize}
+    \item From PLC: Solenoid valve at chiller outlet
+    \item On FEB chiller (via RS-232): start/stop, temperature setpoint, pump speed
+\end{itemize}
+\subsubsection*{SVT cooling loop}
+\begin{itemize}
+    \item From PLC: Actuated ball valve at chiller outlet
+    \item From PLC: Chiller circuit breaker
+    \item On SVT chiller (via RS-232): start/stop, temperature setpoint, pump power
+\end{itemize}
+\subsubsection*{Voltages}
+\begin{itemize}
+    \item From PLC: MPOD enable signal (shuts down all LV and HV channels)
+    \item From MPOD IOC: Controls for individual MPOD channels
+\end{itemize}
+
+
 
 \subsection{Interlocks}
 \label{sec:svt_power_monitoring_alarm_interlocks}
@@ -168,8 +209,56 @@ The solenoid valves are interlocked to mitigate any leaks in the cooling system.
 If the flow meter in either cooling loop detects low flow, the valve at that chiller's outlet closes to prevent coolant from being pumped out of a possible leak in that loop. 
 If the vacuum gauge detects a loss of vacuum, both solenoid valves close in case the vacuum loss is due to a coolant leak inside vacuum.
 
+\subsection{Potential accidents}
+\subsubsection*{Coolant leakage inside vacuum}
+A small leak inside the vacuum will be detected by the vacuum gauges. A large leak will trip the flow switch.
+\subsubsection*{Coolant leakage outside vacuum}
+A small leak will drain the chiller until its level switch trips, then the flow switch will trip. A large leak will trip the flow switch.
+\subsubsection*{Low level in SVT cooling system}
+The HFE 7000 fluid is very volatile and is known to evaporate from the chiller reservoir. Any bad seals in the system would increase the rate of loss. The observed rate of loss in testing is less than 1 L/week, and the reservoir capacity is more than 5 L, but the level should be monitored regularly. A low level warning (reported in RS-232 status) will precede a low level alarm (chiller trip).
+\subsubsection*{Chiller failure or abnormal operation}
+A pump or power failure in a chiller will trip the flow switch.
+
+A refrigerator or control failure may cause the chiller to run at an unexpected temperature. This would be detected by the RTDs.
+\subsubsection*{Blockage in a cooling line}
+A blockage in the FEB cooling loop, or the SVT cooling lines before the manifold, would reduce total flow in the system. This would be detected by the flow switch or the RTD on the return side.
+
+A blockage in one half of the SVT cooling manifold would reduce flow to half the SVT but might not be detectable by any of the cooling loop instrumentation. The only likely indication is a rise in the SVT hybrid temperatures. Since we don't expect this to happen suddenly or require rapid intervention, we will set an alarm on the SVT hybrid temperatures but no interlock.
+\subsubsection*{Beam trip}
+The SVT HV must be shut off following a trip, to ensure that the HV is not accidentally left on while the beam is being brought back.
+
+\subsection{Interlocks for operation with beam}
+All interlocks are triggered by PLC inputs. Actions are divided into PLC (fast and reliable, since the inputs, logic and outputs are all internal to the PLC) and EPICS (slower, less reliable, less critical)
+\subsubsection{Cooling loop failure (high or low temperature on either RTD, or flow switch trip)}
+Trip points must be adjustable to allow for operation at different temperatures. There must be some sort of interlock bypass for system startup (i.e. it must be possible to start the chiller when temperatures are out of spec and the flow switch is tripped).
+\begin{itemize}
+    \item PLC interlock: Close the valve at the chiller outlet. Disable the MPOD.
+    \item Software interlock: Turn off the chiller.
+\end{itemize}
+
+\subsubsection{Bad vacuum (vacuum gauge)}
+\begin{itemize}
+    \item PLC and software interlocks: Same action as cooling loop failure, for both loops. (so chillers will be valved off and shut off, and the MPOD will be disabled)
+\end{itemize}
+
+\subsubsection{Beam off (BPM signal)}
+%There should be an option to have a PLC interlock that disables the MPOD.
+If the beam is lost, the SVT should automatically go to a safe configuration until beam is restored.
+The specific actions for this interlock depend on how cautious we are being.
+\begin{itemize}
+\item Software interlock: Turn off all HV channels.
+\item Software interlock: Fully retract both SVT positioners.
+\end{itemize}
+
 
 \section{Motion}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=15cm]{motion.eps}
+\caption{SVT Motion System}
+\label{fig:motion}
+\end{figure}
+
 Figure~\ref{fig:motion} shows the SVT Motion System schematically. The top/bottom of each SVT support plate has three sensor layers (L1, L2, L3) and a wire frame, supported on a bearing at one end and connected to a rod attached to a linear stage at the other end. The linear stage is moved by a stepper motor through the EPICS slow controls system. In the nominal run position, the support plates are parallel to the beam and the Silicon physical edge is at 0.5 (L1), 2.0 (L2), and 3.5 mm (L3) from the beam. The support plates can be retracted by 1.3 degrees. Figure~\ref{fig:beam} shows the beam's eye view of the wires and the L1 sensor edge in the nominal run position and in the fully retracted position.
 
 The stepper motor controller is Newport XPS controller, and is different from the stepper motor controllers found in Hall B. The motor control is based on an optical encoder. Stage movement is precisely calibrated, and re-calibration is not necessary. Since the encoder has no knowlege of the actual stage position when the controller power is turned on, the linear stage must move to a reference point to establish its calibration (called ``homing''). A switch is located at the fully retracted position for this purpose. 
@@ -351,33 +440,48 @@ Below is a description of each of the GUI's in the list.
 
 \section{SVT Cooling}
 
-As described above, the following parameters are monitored through the EPICS slow controls system:
-
-\begin{itemize}
-	\item Flow, inlet temperature, and outlet temperature for both cooling loops (read through Allen-Bradley PLC)
-	\item On-board temperatures for SVT modules and front end boards (read through SVT DAQ)
-	\item Chiller status and setpoints (read through RS-232 interfaces of chillers)
-\end{itemize}
-
-These are displayed on a monitoring GUI (Figure \ref{fig:cooling_display}). The SVT alarm handler has alarms defined for the temperatures: see the SVT monitoring section.
+\begin{figure*}[t]
+	\begin{center}
+		\includegraphics[width=0.5\textwidth]{svt_plc.png}
+		\caption{SVT PLC GUI, accessed through the \textbf{Devices} menu in \textbf{hps\_epics}.}
+		\label{fig:ctrl_cooling_plc}
+	\end{center}
+\end{figure*}
 
 \begin{figure*}[t]
 	\begin{center}
-		\includegraphics[width=0.5\textwidth]{svtTemp.png}
-		\caption{SVT temperature GUI An updated GUI (work in progress) will show flow and chiller status.}
-		\label{fig:cooling_display}
+		\includegraphics[width=0.5\textwidth]{svt_softinterlocks.png}
+		\caption{SVT software interlocks GUI, accessed through the \textbf{Devices} menu in \textbf{hps\_epics}.}
+		\label{fig:ctrl_cooling_softinterlocks}
+	\end{center}
+\end{figure*}
+
+\begin{figure*}[t]
+	\begin{center}
+		\includegraphics[width=0.5\textwidth]{svt_svtchiller.png}
+		\caption{SVT chiller GUI, accessed through the \textbf{Devices} menu in \textbf{hps\_epics}.}
+		\label{fig:ctrl_cooling_svtchiller}
+	\end{center}
+\end{figure*}
+
+\begin{figure*}[t]
+	\begin{center}
+		\includegraphics[width=0.5\textwidth]{svt_febchiller.png}
+		\caption{FEB chiller GUI, accessed through the \textbf{Devices} menu in \textbf{hps\_epics}.}
+		\label{fig:ctrl_cooling_febchiller}
 	\end{center}
 \end{figure*}
 
 \section{Motion}
 
+
+
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=15cm]{motion.eps}
-\caption{SVT Motion System}
-\label{fig:motion}
+\includegraphics[width=10cm]{svt_movers.png}
+\caption{SVT positioner GUI, accessed through the \textbf{Motors} menu in \textbf{hps\_epics}.}
+\label{mover}
 \end{figure}
-
 
 
 
@@ -681,13 +785,6 @@ Hit ``STOP'' to abort.
 \end{itemize}
 
 The positions of the stage, wire and Layer 1 sensor edge will be shown in ``SVT Position:'' in their respective coordinate.  Moving the SVT away from the home position is interlocked by beam conditions, shown by the interlock status light in the GUI.  Lack of safe interlock status will prevent motion of the SVT from the home position and loss of interlock will cause the SVT to return to home automatically.
-
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=10cm]{svt_movers.png}
-\caption{SVT Mover}
-\label{mover}
-\end{figure}
 
 \subsection{SVT Wire Scanner Operations}
 
