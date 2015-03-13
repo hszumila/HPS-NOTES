@@ -385,7 +385,42 @@ These are displayed on a monitoring GUI (Figure \ref{fig:cooling_display}). The 
 \chapter{Procedures}
 
 
+\section{General Procedures}
+\subsection{Checklist: Preparing for beam}
+\label{sec:proc_general_beamchecklist}
+This verifies that the SVT is ready for beam. This checklist should be done before any beam passes through HPS.
+\begin{enumerate}
+\item Check that the chillers are running.
+\item Check the interlocks.
+\item Check that voltages are on.
+\item Check the SVT soft limits: Open the SVT positioner GUI. For each half of the SVT, open the \textbf{Motor Expert Gui} (under \textbf{Expert Screens}) and check the \textbf{Hi limit} against the shift instructions.
+%\item Check the SVT shift instructions for ``Before Beam'' settings.
+\item Set the beam interlock: {\color{red} doesn't exist yet}
+\end{enumerate}
 
+\subsection{Starting a run with beam}
+\label{sec:proc_general_startrun}
+\begin{enumerate}
+\item Reset the beam interlock: go to the SVT software interlocks GUI, push the \textbf{Bypass} button, the \textbf{Reset} button, then the \textbf{Normal} button.
+\item To close the SVT (if the motion interlock was enabled): open the SVT positioner GUI.
+For each half of the SVT, type the required position (see shift instructions) in the \textbf{Move Layer-1 to} box and hit \textbf{Enter}.
+Verify that the positions shown in the scaler GUI match the required position.
+\item To turn on HV (if the HV interlock was enabled): follow the \textbf{Turn on SVT High Voltage Bias} portion of the \textbf{Turning the SVT power and bias ON} procedure, \ref{sec:proc_voltages_allon}.
+\item If the run was stopped: start the run (see the DAQ manual).
+\end{enumerate}
+
+\subsection{Response to beam trip}
+\label{sec:proc_general_beamtrip}
+If the beam is lost, the SVT software interlock may (depending on settings) turn off all HV channels or open the SVT.
+
+\begin{enumerate}
+\item Check the SVT shift instructions to see what actions are required.
+\item {\color{red} What should be checked for DAQ?}
+\item If the HV interlock was enabled: Look at the SVT bias GUI, and verify that the \textbf{Measured Voltage} column reads 0 for all channels. If not, call the expert. Continue with the procedure.
+\item If the motion interlock was enabled: Look at the scaler GUI, and verify that the \textbf{Position} of the top and bottom read 0.0000.
+\item If the run needs to be stopped, see the DAQ manual for instructions.
+\item Wait for good beam to be restored, then follow the procedure for starting a run, \ref{sec:proc_general_startrun}.
+\end{enumerate}
 
 \section{Response to Alarms}
 
@@ -414,6 +449,7 @@ More information about the alarm handler can be found in the slow control manual
 \section{Voltages}
 \label{sec:proc_voltages}
 \subsection{Turning the SVT power and bias ON}
+\label{sec:proc_voltages_allon}
 To power ON all of the SVT follow this procedure:
 \begin{enumerate}
 
@@ -491,6 +527,7 @@ Wait until all status indicators turn {\color{green} \textbf{GREEN}} and no alar
 \end{enumerate}
 
 \subsection{Turning the SVT power and bias OFF}
+\label{sec:proc_voltages_alloff}
 To power OFF all of the SVT follow this procedure:
 \begin{enumerate}
 \item Turn off SVT FEB Power
@@ -596,26 +633,34 @@ Be sure to cap the connection not being purged using a VCR cap and a used gasket
 \item Follow the instructions in the chiller manual to fill the chiller. Use the metal funnel.
 \item If the final level of the chiller is below 1/4, add a full jug of HFE 7000.
 \end{enumerate}
-%\textbf{EXPERTS ONLY: }The startup procedure is as follows.
-%When the SVT detector is under vacuum, the cooling must be switched on before the detector is powered, while the cooling is only recommended if the detector is in air. This condition is logically interlocked in the Slow Control. At the beginning the chiller is switched on and the by-pass valve is adjusted to get sufficient cooling flow, ~10 g/s. Once the flow is stable and the temperature of the Silicon sensors is close to the chiller set point, the Power Supplies can be switched on. 
 
-%\textbf{EXPERTS ONLY: }The procedure for draining the system is as follows
-%To drain the system in case of an access required for maintenance, all the detector must be powered off, the solenoid valve closed and the chiller powered off. The ball valves on the supply and return line must be closed and the drain can be done through the Tee fittings by means of a clean compressed gas (air or nitrogen)
+\subsection{Response to unexpected HV loss}
+\label{sec:proc_cooling_HVloss}
+If the beam software interlock is enabled, and the beam is off, EPICS will turn off all HV channels.
 
-\begin{verbatim}Two kinds of potential accidents have been considered with the 
-corresponding mitigation actions. In the event of any leak, 
-contact the expert immediately.
-\end{verbatim}
-
-\textbf{Cooling Leakage inside vacuum:} \\ The two fittings between the flexible hose and the vacuum feedthroughs are the only locations where potential leaks may occur. In this case; the vacuum gauge, the temperatures sensors on the detectors, and the flow meter provide interlock signals which disable operation of the SVT. The power supplies are powered off, the flow is stopped by the solenoid valve, while the chiller pump will empty the cooling loop. The beam must be stopped.
-
-\textbf{Cooling leakage outside vacuum:} \\ More fittings are potentially susceptible, although the consequences are less severe. The same interlocks apply as in the previous case, with the exception of loss of vacuum that stops the beam. The list of actions is the same but the beam does not need to be stopped.
-
-In case an the interlock system issues an interlock signal it triggers a fast shutdown of the affected supplies or the entire crate using the \textbf{FAST\_SHUTDOWN} feature of the MPOD controller in the crate. Power will shut down ignoring any ramp-down parameters. To recover  the power supplies from an interlock signal:
 \begin{enumerate}
-\item Find out which input triggered the interlock signal.
-\item See if the problem can be understood and corrected easily. Otherwise call the SVT expert.
-\item If possible, mitigate and reset the interlock signal and the power can be restored as described above in Sec.~\ref{sec:proc_voltages}.
+\item Verify that all HV channels are off (check the SVT HV bias GUI), but LV channels are on (check the FEB power and flange power GUIs). If LV channels are also off, stop following this procedure. Go to procedure \ref{sec:proc_cooling_mpodtrip}.
+\item Check the BPMs (see the scaler GUI or strip charts). If there has not been a beam trip recently, call the SVT expert.
+\item If there has been a beam trip, follow the procedure for recovering from a beam trip, \ref{sec:proc_general_beamtrip}.
+\end{enumerate}
+
+\subsection{Response to unexpected MPOD trip}
+\label{sec:proc_cooling_mpodtrip}
+If the MPOD's interlock input is disabled by the PLC, all HV and LV channels will turn off. This should always be accompanied by other trips, which will indicate the cause of the problem.
+
+\begin{enumerate}
+\item If all HV channels are off (check the SVT HV bias GUI), but LV channels are on (check the FEB power and flange power GUIs), stop following this procedure. Go to the procedure for recovering from HV loss, \ref{sec:proc_cooling_HVloss}.
+\item Look at the MPOD status web page (\texttt{http://hpsmpod}). At the top, next to \textbf{Mainframe Status}, it should read \textbf{\color{red} FAST\_OFF}. If it does not, the MPOD is not tripped (or it tripped momentarily). Call the SVT expert.
+\item Check the status of both chillers (second line of each chiller's EPICS screen). If either chiller is stopped, stop following this procedure. Go to the procedure for recovering from a chiller trip, \ref{sec:proc_cooling_chillertrip}.
+\item Call the SVT expert if none of the previous steps resolved the problem.
+\end{enumerate}
+
+\subsection{Response to unexpected chiller trip}
+\label{sec:proc_cooling_chillertrip}
+
+\begin{enumerate}
+\item Look at the EPICS screens for the PLC. Check the alarm status fields for any PLC alarms. Also look at the software interlock screen and check the interlock status fields for any interlock faults. Call the SVT expert with the list of alarms.
+\item If the expert tells you to restart the chiller: Disable all PLC alarms that have tripped. Bypass and reset all software interlocks that have tripped. Start the chiller from its EPICS screen. As alarms clear, re-enable all alarms and interlocks that you disabled. If any alarm does not clear, call the SVT expert.
 \end{enumerate}
 
 \section{Motion}
