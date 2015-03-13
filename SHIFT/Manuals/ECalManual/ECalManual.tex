@@ -166,12 +166,50 @@ Shift takers are requested to operate the system in ``Sequence mode'' only. To d
 \includegraphics[width=0.95\textwidth]{pics/DSCScalersLED_2014_12_20.png}
 \caption{\small \label{LEDScalers} The HPS DSC scaler during a LED run.}
 \end{figure}
-
+\newpage
 \subsection{Automatic LED Monitoring}
-A monitoring app is setup to record all channels successfully registered during an LED run.  It should be started before the LED sequence is started and viewed afterwards, with the command: \begin{center}\$HOME/scripts/ECalLEDMonitor.sh\end{center}.
+A monitoring app is setup to record all channels successfully registered during an LED run.  It should be started before the LED sequence is started and viewed afterwards, with the command: \begin{center}\$HOME/hps\_software/scripts/startECalLEDSequenceMonitoring.csh\end{center} Make sure to use the hpsrun account before using this command.
+  
+  {\bf\it ? TODO: Make pedestal viewer app accessible from EPICS gui, and make it save ped files to an absolute path.}
 
-    {\bf \it TODO:  To Be Tested.  Make app accessibble from EPICS gui.}
+    
+\subsection{Taking an LED sequence run}
+The following instructions must be followed to take an LED sequence run. This involves setting the DAQ, starting the LED sequence run, and configure the hps-java monitoring app to monitor the data. At the end of the run, the user can upload the relevant information to the hps conditions database, as well as post a log-entry to the HallB electronic logbook.
+
+\subsubsection{Setup}
+Follow these instructions to setup the system before takin the LED sequence run.
+
+\begin{description}
+\item[Start the DAQ system: ]{Use the run-control to CONFIGURE the DAQ with the proper setting file. Click on ``DOWNLOAD'', then on ``PRESTART''. Wait until the ``GO'' button appears, but {\bf do not click on it yet.}
+\bf\it ? TODO: Describe this better: which file to use?
+ }
+\item[Start the monitoring app: ]{Use the command outlined in the previous section to start the monitoring app.\textcolor{red}{Do this after the run-control shows the ``GO'' button.} When the main gui window shows up, click on the ``Connect button''. The Ecal event display will show up.}
+\item[Initialize the LED monitoring sequence:]{In the EPICS gui, click on ``Initialise Flasher'', then on ``!Stop All Seq'' (to ensure there are no previous sequences running). For both controllers, ensure the LED ON/OFF button is set to OFF (you will turn it ON later).} 
+\end{description}
       
+\subsubsection{Run start, data taking, and run stop}
+To start data taking, FIRST click on the ``GO'' button in the run-control gui. Wait 10~s (until the message ``transiction go succeded'' is displayed in the log window and the ``END'' button displays). Then click on ``Start Blue Seq'' or ``Start Red Seq'' in the EPICS gui. Default sequence to take is the BLUE one. Take a RED sequence only if the Ecal expert ask you to do so.
+
+While the LED sequence is running, you can look at the monitoring application to check data being recorded. The event display will show 8 crystals at time with a signal. A full sequence will take $\simeq$ 10 minutes to complete.
+
+{\bf  The DAQ system is not set up to end the run when the LED sequence is completed.} 
+
+Therefore, use the EPICS gui to check the sequence status (RED is OFF, GREEN is ON). The user can confirm the sequence has actually ended by looking at the ECal Event display: no crystals are ON at this stage.
+When both sequences are OFF, first turn OFF both controllers (LED ON/OFF, click on OFF), then use the DAQ run control to END the run.
+
+
+
+\subsubsection{Analysis at the run end}
+
+When the run ends, the monitoring application automatically will recognize this, and the analysis of the measured data will start. 
+
+A pop-up will appear, asking the user if he wants to upload the LED data that has been measured to the HPS conditions database: uploaded quantities are the average channel response to LED pulses and the RMS. Before confirming this, the user is required to have a look at the average charge per LED, displayed in the monitoring app: tab Ecal Led Sequence, sub-tab Sequence Map. The average channel response should be in the range $\simeq 20 \div 30$. 
+
+An automatic log entry in the Hall B logbook will also be made, with the Sequence Map image. The user is requested to complete the comment form with any relevant observation, and then click on ``OK''
+
+{\bf {\it TODO: print a reference map and aks the user to compare with that}}
+
+
    \section{Making a cosmic calibration run}
 
    In addition to the calorimeter, the cosmic PMTs should be powered on.  Their HV control is under ``beam'' in the main EPICS gui's HV section.  They are named \texttt{ECal\_cosm1} and \texttt{ECal\_cosm2}.  The DAQ configuration should be set to \begin{center}\texttt{hps\_cosmic\_mode1\_thresh0.cfg}\end{center}  It takes at least one full day of data to acquire sufficient statistics for a cosmic calibration.
