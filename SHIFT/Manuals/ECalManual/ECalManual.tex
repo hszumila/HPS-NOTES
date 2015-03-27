@@ -276,7 +276,7 @@ The FADC crates and calorimeter signal splitters occupy the rack furthest from t
    The cooling system is using a Thermo Scientific chiller that can be controlled through EPICS (\ref{ChillerCam}). The setting should not be modified; the temperature setting should be fixed at 17 degrees Celsius. In case of problem with the chiller contact ??? (who can take care of these in Hall-B engineer group?).  The manual for the chiller can be found here:
 
    {\noindent\footnotesize\url{http://www.nist.gov/ncnr/upload/Circulating-Bath\_Thermo-Scientific\_NESLAB-RTE-7.pdf}}
-     \subsection{Rebooting After Power Failure}
+     \subsection{Rebooting the Chiller After Power Failure}
      If the chiller loses power while in local mode, the ``power'' button must be pressed manually to restart it after power is restored.  In case it loses power while in remote mode, a procedure is necessary to reset it after power is restored:
    {\footnotesize
      \begin{enumerate}
@@ -288,11 +288,37 @@ The FADC crates and calorimeter signal splitters occupy the rack furthest from t
     \end{enumerate}
     }
 
+    \subsection{Restarting the Chiller IOC}
+    Chiller IOC runs in ``procserv'', a wrapper that automatically runs and restarts services and provides access to them via telnet.  To restart the chiller's IOC:
+   {\footnotesize
+   \begin{enumerate}
+       \item \texttt{`ssh hpsrun@clonsl1'}
+       \item \texttt{`softioc\_console iocchiller'} and type user's password if necessary.
+       \item \texttt{`ctrl-x'} to restart the IOC
+       \item \texttt{`ctrl-]'} to quit to telnet
+       \item \texttt{`quit'} to exit telnet
+   \end{enumerate}
+   }
+
+   \subsection{Restarting the Temperature Monitoring IOC}
+   Thermocouples are used to monitor the temperature inside and outside the calorimeter.  To restart the IOC that reads these:
+   {\footnotesize
+   \begin{enumerate}
+       \item \texttt{`ssh hpsrun@clonsl1'}
+       \item \texttt{`softioc\_console ioctempSens'} and type user's password if necessary.
+       \item \texttt{`ctrl-x'} to restart the IOC
+       \item \texttt{`ctrl-]'} to quit to telnet
+       \item \texttt{`quit'} to exit telnet
+   \end{enumerate}
+   }
+
+
+
    \section{Changing LV settings}
       Low voltage power supply should be set at $\pm5$V. The low voltage supply might have difficulties to get at this level because of the high current. If that was the case check, with all power supplies off, that all connection are goods. Then contact run coordinator to see if LV power supply addition is possible. 
 
    \section{High Voltage}
-   \subsection{Restarting the IOC}
+   \subsection{Restarting the Chiller's IOC}
    Occaissonaly the soft IOC for the HV needs to be manually restarted.  Symptoms of this condition include errors messages from EPICS when trying to turn on/off voltages and white blocks in the main HV screen (figure~\ref{HV}).  The IOC always needs to be restarted if the mainframe is power cycled.  
    
    Currently, the HV IOC runs in a ``screen'' on \texttt{clonioc1}.  To restart it, follows these steps:
