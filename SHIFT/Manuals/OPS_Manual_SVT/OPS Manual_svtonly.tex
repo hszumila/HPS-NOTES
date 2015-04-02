@@ -13,7 +13,7 @@
 \title{HPS SVT Operations Manual \\ v1.0}
 \author{SVT On-Call Cell Phone: 757-541-7539 \\ 
 Authors: \\
-Per Hansson, John Jaros, Takashi Maruyama, \\ Tim Nelson\footnote{contact person for this document}, Marco Oriunno, Sho Uemura}
+Per Hansson, John Jaros, Takashi Maruyama, Omar Moreno,\\ Tim Nelson\footnote{contact person for this document}, Marco Oriunno, Sho Uemura}
 \date{March 8, 2015} % delete this line to display the current date
 
 %%% BEGIN DOCUMENT
@@ -420,6 +420,7 @@ Below is a description of each of the GUI's in the list.
 \item Control: ON/OFF switch for each sensor.
 \item Control: Set point for voltage for all modules (EXPERT ONLY).
 \item Control: Set point for voltage and ramp values for each module (EXPERT ONLY).
+\item Control: \textbf{RESET INTERLOCKS} button to restore normal function after an MPOD trip.
 \end{itemize}
 
 
@@ -474,7 +475,18 @@ Below is a description of each of the GUI's in the list.
 
 \section{Motion}
 
+The SVT movers are controlled using the SVT positioner GUI.
+The GUI controls the top and bottom halves of the SVT separately.
+For each half, the GUI shows the position in four ways: stage position, wire-to-beam distance, layer-1-to-beam distance, and angle. Except for the stage position (0 at home, positve as the stage moves in), these are signed values (positive above the beamline, negative under it).
 
+The \textbf{Retract Stage} button moves the stage to 0.000 (all the way out).
+The button is disabled (red border) if this half of the SVT is already all the way out.
+
+The \textbf{Move Layer-1 to} text box moves the SVT to user-defined positions.
+Type the desired (signed) value of the layer-1 distance and press \textbf{Enter} to move the stage.
+There is a software limit (a minimum layer-1 distance) to prevent unsafe operation of the SVT; the limit is not displayed on this GUI but should be listed in the shift instructions.
+
+\emph{Sometimes there is no response to an input in the text box. If this happens, one workaround is to open the motor expert GUI (click the \textbf{Expert Screens} button), and enter a value in either \textbf{MoveAbs} field. This seems to kick the motor control out of whatever bad state it gets stuck in.}
 
 \begin{figure}[ht!]
 \centering
