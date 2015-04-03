@@ -148,6 +148,9 @@ If not already open, HPS's main EPICS window is opened as user \texttt{hpsrun} o
 \caption{\small \label{HVControl} View of the EPICS ECal HV control window for individual channels.}
 \end{figure}
 
+  \section{Strip Charts}
+      The most import quantities to monitor with strip charts are temperature and HV current.  There are two programs to view strip charts of ECal EPICS variables.  The older StripTool shown in figure~\ref{temp2} can be found in the HPS\_EPICS gui.  The newer MyaViewer (which adds the ability to retrieve archive information), must be run locally on one of the computers in the counting room (\texttt{clonpcN}, where \texttt{N} is one of the numbers from 11 to 19).  The scripts to run it are in {\it hpsrun}'s path: \texttt{mya\_ecal\_all.sh}, \texttt{mya\_ecal\_temp\_top.sh}, \ldots
+
    \section{LED Monitoring}
 
       \subsection{System operations}
