@@ -7,7 +7,7 @@
 \makeatother
 
 
-\title{Manual for HPS ECal v1.6}
+\title{Manual for HPS ECal v1.7}
 
 \author{ECal On-Call Cell Phone: 757-810-1489 \\ 
 Authors: \\
@@ -212,6 +212,14 @@ An automatic log entry in the Hall B logbook will also be made, with the Sequenc
 
 {\bf {\it TODO: print a reference map and aks the user to compare with that}}
 
+\subsection{Quick 2-Minute LED Run for Simple Channel Status Check}
+This just counts threshold crossings in the discriminators, which is sufficient for checking that all channels are alive with LEDs.  This full test of all 442 channels requires only 2 minutes, requires no changes to the DAQ configuration, and is completetely independent of the hps-java monitoring app.
+
+  \begin{enumerate}
+      \item With a quiet detector, execute the command \texttt{runEcalLedTest.sh}.  This will open a gui showing accumulated scaler rates in all 442 ECal channels.  
+      \item Start a ``LessFast'' LED sequence.
+      \item Check that all channels are uniformly populated after sequence is finished.
+  \end{enumerate}
 
    \section{Making a cosmic calibration run}
 
