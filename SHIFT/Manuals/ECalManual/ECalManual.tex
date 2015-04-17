@@ -149,7 +149,14 @@ If not already open, HPS's main EPICS window is opened as user \texttt{hpsrun} o
 \end{figure}
 
   \section{Strip Charts}
-      The most import quantities to monitor with strip charts are temperature and HV current.  There are two programs to view strip charts of ECal EPICS variables.  The older StripTool shown in figure~\ref{temp2} can be found in the HPS\_EPICS gui.  The newer MyaViewer (which adds the ability to retrieve archive information), must be run locally on one of the computers in the counting room (\texttt{clonpcN}, where \texttt{N} is one of the numbers from 11 to 19).  The scripts to run it are in {\it hpsrun}'s path: \texttt{mya\_ecal\_all.sh}, \texttt{mya\_ecal\_temp.sh}, \ldots
+      The most import quantities to monitor with strip charts are temperature and HV current.  There are two programs to view strip charts of ECal EPICS variables.  The older StripTool shown in figure~\ref{temp2} can be started from the HPS\_EPICS gui.  The newer MyaViewer (which adds the ability to retrieve archive information), must be run locally on one of the computers in the counting room (\texttt{clonpcN}, where \texttt{N} is one of the numbers from 11 to 19).  The scripts to run it are in {\it hpsrun}'s path, so in a terminal enter one of:
+      
+      \begin{itemize}
+          \item \texttt{mya\_ecal\_all.sh}
+          \item \texttt{mya\_ecal\_temp.sh}
+          \item \texttt{mya\_ecal\_curr.sh}
+          \item \texttt{mya\_ecal\_voltage.sh}
+      \end{itemize}
 
    \section{LED Monitoring}
 
@@ -218,12 +225,12 @@ This just counts threshold crossings in the discriminators, which is sufficient 
   \begin{enumerate}
       \item With a quiet detector, execute the command \texttt{runEcalLedTest.sh}.  This will open a gui showing accumulated scaler rates in all 442 ECal channels.  
       \item Start a ``LessFast'' LED sequence.
-      \item Check that all channels are uniformly populated after sequence is finished.
+      \item Check that all channels are uniformly populated to within a factor of 2 after the sequence is finished.
   \end{enumerate}
 
    \section{Making a cosmic calibration run}
 
-   In addition to the calorimeter, the cosmic PMTs should be powered on.  Their HV control is under ``beam'' in the main EPICS gui's HV section.  They are named \texttt{ECal\_cosm1} and \texttt{ECal\_cosm2}.  The DAQ configuration should be set to \begin{center}\texttt{hps\_cosmic\_mode1\_thresh0.cfg}\end{center}  It takes at least one full day of data to acquire sufficient statistics for a cosmic calibration.
+   In addition to the calorimeter, the cosmic PMTs should be powered on.  Their HV control is under ``beam'' in the main EPICS gui's HV section.  They are named \texttt{ECal\_cosm1} and \texttt{ECal\_cosm2} and their voltages should be set at 1650 V.  The DAQ configuration should be set to \begin{center}\texttt{hps\_cosmic\_mode1\_thresh0.cfg}\end{center}  It takes at least one full day of data to acquire sufficient statistics for a cosmic calibration.
 
    \section{Taking a Pedestal Run}
 
@@ -322,6 +329,7 @@ The FADC crates and calorimeter signal splitters occupy the rack furthest from t
        \item \texttt{`quit'} to exit telnet
    \end{enumerate}
    }
+Don't leave a terminal open connected to this telnet session.
 
 
 
@@ -331,29 +339,41 @@ The FADC crates and calorimeter signal splitters occupy the rack furthest from t
    \section{High Voltage}
    \subsection{Restarting the HV IOC}
    Occaissonaly the soft IOC for the HV needs to be manually restarted.  Symptoms of this condition include errors messages from EPICS when trying to turn on/off voltages and white blocks in the main HV screen (figure~\ref{HV}).  The IOC always needs to be restarted if the mainframe is power cycled.  
+
+   To restart the IOC:
+   {\footnotesize
+   \begin{enumerate}
+       \item \texttt{`ssh hpsrun@clonsl1'}
+       \item \texttt{`softioc\_console iocecalVoltages'} and type user's password if necessary.
+       \item \texttt{`ctrl-x'} to restart the IOC
+       \item \texttt{`ctrl-]'} to quit to telnet
+       \item \texttt{`quit'} to exit telnet
+   \end{enumerate}
+   }
+Don't leave a terminal open connected to this telnet session.
    
-   Currently, the HV IOC runs in a ``screen'' on \texttt{clonioc1}.  To restart it, follows these steps:
-   {\footnotesize
-   \begin{enumerate}
-       \item \texttt{`ssh hpsrun@clonioc1'}
-       \item \texttt{`screen -ls'} to list running screens
-       \item \texttt{`screen -x ECALHVIOC'} to attach to the screen running the IOC
-       \item \texttt{`ctrl-c'} to kill the IOC
-       \item \texttt{`up-arrow ; return'} to restart the IOC
-       \item \texttt{`ctrl-a-d'} to detach from the screen
-   \end{enumerate}
-   }
-   If for some reason this does not work (e.g. no screen named something like \texttt{ECALHVIOC} is listed in \#2, or \#5 does not start the IOC), you can start from scratch:
-   {\footnotesize
-   \begin{enumerate}
-       \item \texttt{`ssh hpsrun@clonioc1'}
-       \item \texttt{`screen -S ECALHVIOC'} to create and attach to a new screen named \texttt{ECALHVIOC}
-       \item \texttt{`cd /home/nerses/github\_test/epics/apps/iocBoot/iocECal\_Voltages'}
-       \item \texttt{`./st.cmd'} to start the IOC
-       \item \texttt{`ctrl-a-d'} to detach from the screen
-   \end{enumerate}
-   }
-   Don't leave a terminal open connected to this screen.
+%   Currently, the HV IOC runs in a ``screen'' on \texttt{clonioc1}.  To restart it, follows these steps:
+%   {\footnotesize
+%   \begin{enumerate}
+%       \item \texttt{`ssh hpsrun@clonioc1'}
+%       \item \texttt{`screen -ls'} to list running screens
+%       \item \texttt{`screen -x ECALHVIOC'} to attach to the screen running the IOC
+%       \item \texttt{`ctrl-c'} to kill the IOC
+%       \item \texttt{`up-arrow ; return'} to restart the IOC
+%       \item \texttt{`ctrl-a-d'} to detach from the screen
+%   \end{enumerate}
+%   }
+%   If for some reason this does not work (e.g. no screen named something like \texttt{ECALHVIOC} is listed in \#2, or \#5 does not start the IOC), you can start from scratch:
+%   {\footnotesize
+%   \begin{enumerate}
+%       \item \texttt{`ssh hpsrun@clonioc1'}
+%       \item \texttt{`screen -S ECALHVIOC'} to create and attach to a new screen named \texttt{ECALHVIOC}
+%       \item \texttt{`cd /home/nerses/github\_test/epics/apps/iocBoot/iocECal\_Voltages'}
+%       \item \texttt{`./st.cmd'} to start the IOC
+%       \item \texttt{`ctrl-a-d'} to detach from the screen
+%   \end{enumerate}
+%   }
+%   Don't leave a terminal open connected to this screen.
    \subsection{Changing HV Settings}
       {\bf NOTE:} Changing voltage settings should be taken care of in coordination with the ECal group (contact R.~Dupre). Current setting can be increased in case of need, please document this change in the log book and notify the ECal expert on call.
 
@@ -398,6 +418,16 @@ The product should be a plot like figure~\ref{HVhistory}.
    \section{Disconnection of a Channel and Preamplifier Replacement}
      
       In last resort, to recover a HV group that is tripping one can disconnect the faulty channel causing trouble. To do so, you need to find exactly which channel is involved! It might be obvious from data, if the channel was already very noisy, else you will have to test the channels of the group one by one. This is a lengthy operation and should only be attempted with the authorization of the run coordinator and in coordination with the ECal Group. It necessitates that the Hall-B crew moves the ECal out of the beam line and to open it.
+
+\section{Channel Mapping GUI}
+Channel mapping is available in a spreadsheet in the annex pdf on the run wiki. It is also available in a GUI, and a script to run it is in \texttt{/home/hpsrun/scripts} on the clon machines.  To run it just enter in a terminal on one of the \texttt{clonpcN} machines:
+{\center{\texttt{kylesGui.sh}}}\newline\newline
+Hover over a crystal with the mouse to see all its channel numberings in the table at the bottom of the window.  There is also a filtering option to highlight all channels corresponding to certain criteria.  For example, figure \ref{fig:kylesGui} shows highlighted in white all channels corresponding to HV group 25.
+
+\begin{figure}[htbp]\centering
+    \includegraphics[width=16cm]{pics/kylesGui.png}
+    \caption{The ECal event display can be used to get channel mappings.  The blue highlighted channel's mappings are shown in the table.\label{fig:kylesGui}}
+\end{figure}
 
    \section{LED system for experts}
 
