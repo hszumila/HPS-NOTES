@@ -8,7 +8,7 @@
 
 % See the ``Article customise'' template for come common customisations
 
-\title{HPS DAQ Operations Manual v1.1}
+\title{HPS DAQ Operations Manual v2.0}
 \author{Per Hansson Adrian, Omar Moreno, Sergey Boiarinov\thanks{Contact person for document.} }
 %\date{} % delete this line to display the current date
 
@@ -38,7 +38,7 @@ For the ECal, every VXS crate contains a Readout Controller (ROC) that collects 
 
 \begin{enumerate}
 \item 
-Log into \texttt{clondaq3} as \texttt{clasrun}.
+Log into \texttt{clondaq5} as \texttt{clasrun}.
 %\item 
 %If not sure, check that you can open a X window
 %\begin{enumerate}
@@ -48,9 +48,9 @@ Log into \texttt{clondaq3} as \texttt{clasrun}.
 %Kill xwindow, start new one (you will be on \texttt{clon03}) and log into \texttt{clon10}.  Make sure \texttt{xterm} command can open xterminal.
 %\end{enumerate}
 \item 
-To start all DAQ processes, open a terminal:\newline
-\texttt{cd \$CLAS} \newline
-\texttt{hpsdaq3\_start} \newline
+To start all DAQ processes, open a terminal and run:\newline
+\texttt{> hps\_start} \newline
+\texttt{> roc\_xterms\_start} \newline
 This opens up all windows needed on the current workspace. The workspace should look like Fig.~\ref{fig:coda}.
 \end{enumerate}
 %=======================
@@ -64,11 +64,6 @@ This opens up all windows needed on the current workspace. The workspace should 
 \end{figure}
 %=======================
 
-\subsection{Troubleshooting}
-
-\subsubsection{DAQ won't start}
-Make sure that all CODA processes are killed before running the start script above.
-
 \subsection{Start and stop a run}
 \begin{enumerate}
 \item
@@ -81,7 +76,7 @@ Beam conditions are ready for running (see beam line manual for more details).
 ECal Checklist
 \begin{enumerate}
 \item
-Check that ECal is ready to go  (see ECal manual for more details).
+Items to be added.
 \end{enumerate}
 \item
 SVT Checklist
@@ -91,18 +86,26 @@ SVT position is appropriate for the run. {\bf Check with shift leader if not sur
 \item 
 SVT Flange boards and SVT Front end boards (FEBs) are powered with currents as specified. 
 \newline
-If not, restart the FEBs turning on in the order: {\bf DIG, ANAP and then ANAN}. Then power all the flange channels. Go to the "svtDpmLinkStatus" GUI and check that the FEB link errors are not incrementing. If they do, try to cycle the flange board power (wait 10-20s between cycles). You may need up to 4 cycles.
+{\bf IF ON:} check that currents are updating: if not, try to reboot the "iochvCaen" IOC.
+\newline
+{\bf IF OFF:} restart the FEBs turning on in the order: {\bf DIG, ANAP and then ANAN}. Then power all the flange channels. Go to the "svtDpmLinkStatus" GUI and check that the FEB link errors are not incrementing. If they do, try to cycle the flange board power (wait 10-20s between cycles). You may need up to 4 cycles.
+\item 
+SVT Hybrids are powered (all indicators green) and currents updating regularly.
+\item 
+Bias high voltage is ON and at 180V (unless SVT expert has told you something different). 
+{\bf \textcolor{red}{Important: Check that beam conditions for turning on bias voltage is OK before swiching on (see above)!}}
+
 \item
 SVT DAQ is in a state ready to run:
 \begin{enumerate}
 \item
-No link errors.
+Check that all the DPM and DTMs in \texttt{svtDaqIOCStatus} GUI are OK.
 \item
-All DPMs are in "Ready" state.
+Check that error counts in the "svtDpmLinkStatus" GUI are zero and not updating.
 \item
-All DPMs are in "Stopped" CODA state. 
-\newline
-If the DAQ was stopped from a previous run the allowed CODA states are "Download" or "Prestart".
+In \texttt{svtDpmStatus} GUI: check that all DPMs are in "Ready" or "Unconfigured" state.
+\item
+In \texttt{svtDpmStatus} GUI": check that all DPMs are in the appropriate CODA Runstate. This may be different if the DAQ was stopped from a previous run (e.g. in "End") or this is starting from scratch.
 \end{enumerate}
 \end{enumerate}
 
@@ -111,7 +114,7 @@ If the DAQ was stopped from a previous run the allowed CODA states are "Download
 \item
 Go to the \texttt{RunControl} GUI: click \texttt{connect}, a new GUI window opens.
 \item
-Click on \texttt{DAQ Configuration} and choose the \texttt{hps3} configuration. Click OK.
+Click on \texttt{DAQ Configuration} and choose the configuration that has been explained to you: either on the run plan wiki or on the whiteboard. Click OK.
 \item
 Check that run number, data filename and run configuration filename shown on \texttt{RunControl} GUI are correct. The "download" button should appear. 
 \item
@@ -132,7 +135,7 @@ Press \texttt{Prestart} and wait between 5 and 10s and no errors are reported.
 \item
 Go to the \texttt{svtDpmRunState} GUI and check that all DPM's are in "Prestart" state. 
 \item
-Go to the \texttt{svtHybSync} GUI and check that all hybrids are in "sync" i.e. the \texttt{SyncDetected} variable should be \texttt{0xf} for all hybrids.
+Go to the \texttt{svtHybSync} GUI and check that all hybrids are in "sync" i.e. the \texttt{SyncDetected} variable should be \texttt{0x1f} and indicator should be \textcolor{green}{green} for all hybrids.
 \end{enumerate}
 \item
 Press \texttt{Go} to start the run. 
@@ -140,7 +143,7 @@ Press \texttt{Go} to start the run.
 \item
 Check that the run status is 'running' and that triggers are issued. 
 \item
-Verify SVT DAQ started run properly:
+Verify that the SVT DAQ started run properly:
 \begin{enumerate}
 \item
 Go to the \texttt{svtDpmRunState} GUI and 
@@ -161,66 +164,54 @@ Check that the \texttt{EventCount} is incrementing.
 \item
 Go to the \texttt{RunControl}  GUI and press \texttt{End Run} to stop data taking. 
 \item
-Verify the SVT DAQ ended in a good state: 
+End of run SVT DAQ checklist:
 \begin{enumerate}
 \item
 Go to the \texttt{svtDpmRunState} GUI and:
 \begin{enumerate}
 \item
-Check that the CODA run state is  \texttt{Stopped} for all DPMs.
+Check that the CODA run state is  \texttt{Stopped} for all DPMs and DTMs.
 \item
-Check that the \texttt{TrigCount} and \texttt{EventCount} variables for DPMs and DTMs are identical.
+Check that the \texttt{TrigCount} and \texttt{EventCount} variables for DPMs and DTMs are identical and the indicators are \textcolor{green}.
 \end{enumerate}
 \end{enumerate}
 \end{enumerate}
+
+
+\subsection{Beam trips: actions and recovery for DAQ}
+Beam trips are frequent and in the most normal case the SVT high voltage bias will trip and will need to be restored before continuing.  If a beam trips happen:
+\begin{enumerate}
+\item Stop the run 
+\item If the SVT is operating in a safe or fully retracted position follow these instructions. 
+
+\textcolor{red}{If not, consult run coordinator for instructions on if the SVT position in these cases.}
+\item When beam is back and we are ready go to the \texttt{softInterLocks} GUI under \texttt{Devices} on the HPS GUI. Reset the interlock for the SVT high voltage bias in the bottom right corner.
+\item Go to the SVT high voltage GUI and ramp up voltages. 
+
+\textcolor{red}{Make sure beam conditions and SVT positions are OK (see above) before ramping up high voltage}.
+
+\item Go back to CODA \texttt{run\_control} and continue the run (see above).
+
+\end{enumerate}
+
+
+
 
 \subsection{Stopping and restarting the DAQ}
 
-\subsubsection{SVT DAQ}
-
-{\bf Rebooting the "COBs"} \newline
-Open a terminal on \texttt{clondaq3}. \newline
-\texttt{cd CLAS/slac\_svt/svtdaq/daq/rceScripts} \newline
-\texttt{./reboot\_cob} \newline
-Wait until finished, can be up to 20s. \newline
-
-\textcolor{red}{What is the best way of checking that the DPMs are ok at boot up ?}
 
 
-{\bf Restart the control servers} \newline
-Open a terminal on \texttt{clondaq3}. \newline
-\texttt{cd CLAS/slac\_svt/svtdaq/daq/rceScripts} \newline
-\texttt{./rem\_restart} \newline
-Wait until finished, can be up to 20s. \newline
-
-\textcolor{red}{What is the best way of checking that the server started ok?}
-
-\subsubsection{Stopping and restarting CODA}
+\subsubsection{\texttt{FIX DAQ}: stopping and restarting CODA}
 
 If DAQ problems occur and restarting the run do not work all DAQ processes can be restarted by typing:
 \begin{enumerate}
 \item
-\texttt{hpsdaq3\_exit} in a terminal on \texttt{clondaq3} \newline
+\texttt{hps\_exit} in a terminal on \texttt{clondaq5} \newline
+\texttt{roc\_xterms\_exit} in a terminal on \texttt{clondaq5} \newline
 Wait for script to finish and check that no coda processes are running in the machine.
 \item
-\texttt{hpsdaq3\_start} in a terminal on \texttt{clondaq3} 
-% In the CODA run GUI: click \texttt{End Run} or \texttt{Abort} (whatever button is active)
-%\item
-%Click \texttt{Cancel}
-%\item
-%Run \texttt{roc\_status} command from \texttt{clon10} terminal window: it will show troubled ROC(s) as {\sc UNDEFINED} or {\sc active}
-%\item
-%Click \texttt{Reset}.
-%\item
-%From \texttt{clon10} window, try to reboot troubled ROC(s) using command \texttt{roc\_reboot <roc>}.
-%\item
-%If rebooting any ROC, reboot \texttt{clastrig2} as well
-%\item
-%Wait 2 minutes and run \texttt{roc\_status} again; rebooted ROC(s) must be in \texttt{booted} stage.
-%\item
-%Go to \texttt{EB\_TERM} window and issue \texttt{Ctrl-C} and run previous command using the up arrow on the keyboard(the command should be \texttt{coda\_eb ...}).
-%\item
-%Start new run from \texttt{Download} stage above.
+\texttt{hps\_start} in a terminal on \texttt{clondaq5} 
+\texttt{roc\_xterms\_start} in a terminal on \texttt{clondaq5} \newline
 \end{enumerate}
 
 This will cleanup all processes and you can restart by following the procedures above. 
@@ -237,11 +228,31 @@ Type command \texttt{roc\_reboot crate\_id} in the same terminal where \texttt{c
 \end{enumerate}
 
 
+\subsubsection{SVT DAQ}
+In case you suspect that the SVT DAQ has crashed and it cannot be recovered in the \texttt{FIX DAQ} section above you can restart the SVT DAQ following these instructions. 
 
-%\section{Monitoring}
-%\subsection{Trigger and DAQ}
-%\subsection{ECal}
-%\subsection{SVT}
+{\bf \textcolor{red}{These are expert tasks. Don't do this unless you know what you are doing or the SVT expert helps you.}}\newline
+
+{\bf "Rebooting the COBs"} \newline
+Open a terminal on \texttt{clondaq5}. \newline
+\texttt{> cd $\$$CLAS/slac\_svt/svtdaq/daq/rceScripts} \newline
+\texttt{>./reboot\_cobs} \newline
+
+Issue a ping to one of the DAQ hosts in a terminal (e.g. \texttt{ping dtm0}) and wait until it responds \newline
+
+Check if the reboot was successful by going to the \texttt{svtDaqIOCStatus} GUI and see that all nodes are coming back with OK status. This may take up to 30s. 
+
+{\bf "Restart the DAQ software"} \newline
+Open a terminal on \texttt{clondaq5}. \newline
+\texttt{> cd $\$$CLAS/slac\_svt/svtdaq/daq/rceScripts} \newline
+\texttt{> ./rem\_restart} \newline
+You will see the script connecting to each host. Wait until finished, can be up to 20s. \newline
+
+Check if the reboot was successful by going to the \texttt{svtDaqIOCStatus} GUI and see that all nodes are coming back with OK status. This may take up to 30s. 
+
+
+
+
 
 
 
