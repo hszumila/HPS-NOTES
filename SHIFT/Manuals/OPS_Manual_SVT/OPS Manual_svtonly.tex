@@ -296,17 +296,24 @@ The SVT power and bias as well as alarms are monitored through several GUI's. Al
 
 \begin{enumerate}
 \item Log into the \textbf{clonioc1} computer in the counting house.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=3cm]{epics_dev_svt.png}
+\caption{HPS EPICS main GUI. \label{fig:hps_epics_svt}}
+\end{figure}
+
 \item Open a terminal and issue \texttt{hps\_epics dev} command to open the main HPS GUI. Figure~\ref{fig:hps_epics_svt} show the SVT part of the GUI open.
 \item Each of the individual GUIs can be opened by clicking the appropriate button in the HPS main GUI that opened.
 \end{enumerate}
 
-\begin{figure}
-\includegraphics[width=4cm]{epics_dev_svt.png}
-\caption{HPS EPICS main GUI. \label{fig:hps_epics_svt}}
-\end{figure}
-
-
 Below is a description of each of the GUI's in the list.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=8cm]{svtDaqIOCStatus.png}
+\caption{DAQ IOC Status GUI. \label{fig:svtDaqIOCStatus}}
+\end{figure}
 
 \begin{itemize}
 \item \textbf{DAQ IOC Status} in Fig.~\ref{fig:svtDaqIOCStatus}.
@@ -314,44 +321,33 @@ Below is a description of each of the GUI's in the list.
 \item Monitoring: status and error codes from all SVT DAQ IOCs.
 \end{itemize}
 
-\begin{figure}
-\includegraphics[width=9cm]{svtDaqIOCStatus.png}
-\caption{DAQ IOC Status GUI. \label{fig:svtDaqIOCStatus}}
-\end{figure}
-
 \item \textbf{DPM Status} in Fig.~\ref{fig:svtDpmStatus}.
 \begin{itemize}
 \item Monitoring: run state and event counts  from the data processing nodes in the SVT DAQ.
 \end{itemize}
 
-\begin{figure}
-\includegraphics[width=10cm]{svtDpmStatus.png}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=8cm]{svtDpmStatus.png}
 \caption{DPM state GUI. \label{fig:svtDpmStatus}}
 \end{figure}
 
+\begin{figure}[hb!]
+\centering
+\includegraphics[width=13cm]{svtDpmLinkStatus.png}
+\caption{DPM link status GUI. \label{fig:svtDpmLinkStatus}}
+\end{figure}
 
 \item \textbf{DPM  Link Status} in Fig.~\ref{fig:svtDpmLinkStatus}.
 \begin{itemize}
 \item Monitoring: link errors for each of the data processing nodes in the SVT DAQ.
 \end{itemize}
 
-\begin{figure}
-\includegraphics[width=14cm]{svtDpmLinkStatus.png}
-\caption{DPM link status GUI. \label{fig:svtDpmLinkStatus}}
-\end{figure}
-
-
 \item \textbf{Temperature} in Fig.~\ref{fig:svtTemp}.
 \begin{itemize}
 \item Monitoring: FEB (3 temperatures), 
 \item Monitoring: FEB cooling temperature on the supply and return at the PS magnet for the FEB and SVT chiller.
 \end{itemize}
-
-\begin{figure}
-\includegraphics[width=9cm]{svtTemp.png}
-\caption{Temperature GUI. \label{fig:svtTemp}}
-\end{figure}
-
 
 \item \textbf{Hybrid GUI} in Fig.~\ref{fig:svtHybrid}.
 \begin{itemize}
@@ -360,13 +356,17 @@ Below is a description of each of the GUI's in the list.
 \item Control: ON/OFF switch for each of the three voltages for individual hybrids and all hybrids.
 \end{itemize}
 
-
-\begin{figure}
-\includegraphics[width=14cm]{svtHybrid.png}
-\caption{Hybrid power and temperature GUI. \label{fig:svtHybrid}}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=5cm]{svtTemp.png}
+\caption{Temperature GUI. \label{fig:svtTemp}}
 \end{figure}
 
-
+\begin{figure}[hb!]
+\centering
+\includegraphics[width=13cm]{svtHybrid.png}
+\caption{Hybrid power and temperature GUI. \label{fig:svtHybrid}}
+\end{figure}
 
 \item \textbf{Hybrid Sync} in Fig.~\ref{fig:svtHybridSync}.
 \begin{itemize}
@@ -374,13 +374,11 @@ Below is a description of each of the GUI's in the list.
 \item Monitoring: base and peak value of the sync pulse from each hybrid. (EXPERT ONLY). 
 \end{itemize}
 
-
-\begin{figure}
+\begin{figure}[ht!]
+\centering
 \includegraphics[width=14cm]{svtHybridSync.png}
 \caption{Hybrid sync GUI. \label{fig:svtHybridSync}}
 \end{figure}
-
-
 
 \item \textbf{FEB Power GUI} in Fig.~\ref{fig:svtFebMain}.
 \begin{itemize}
@@ -390,14 +388,6 @@ Below is a description of each of the GUI's in the list.
 \item Control: Set point for voltage, trip and ramp values for each flange board (EXPERT ONLY).
 \end{itemize}
 
-\begin{figure}
-\includegraphics[width=14cm]{svtFebMain.png}
-\caption{FEB power GUI. \label{fig:svtFebMain}}
-\end{figure}
-
-
-
-
 \item \textbf{Flange power GUI} in Fig.~\ref{fig:svtFlange}.
 \begin{itemize}
 \item Monitoring: all  currents to the flange boards. 
@@ -405,13 +395,6 @@ Below is a description of each of the GUI's in the list.
 \item Control: ON/OFF switch for each flange board. 
 \item Control: Set point for voltage, trip and ramp values for each flange board (EXPERT ONLY).
 \end{itemize}
-
-\begin{figure}
-\includegraphics[width=14cm]{svtFlange.png}
-\caption{Flange power GUI. \label{fig:svtFlange}}
-\end{figure}
-
-
 
 \item \textbf{High voltage bias GUI} in Fig.~\ref{fig:svtBias}.
 \begin{itemize}
@@ -424,24 +407,30 @@ Below is a description of each of the GUI's in the list.
 \end{itemize}
 
 
-\begin{figure}
+
+\end{itemize}
+
+\begin{figure}[h!t]
+\centering
+\includegraphics[width=14cm]{svtFebMain.png}
+\caption{FEB power GUI. \label{fig:svtFebMain}}
+\end{figure}
+
+\begin{figure}[h!t]
+\centering
+\includegraphics[width=14cm]{svtFlange.png}
+\caption{Flange power GUI. \label{fig:svtFlange}}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
 \includegraphics[width=14cm]{svtBias.png}
 \caption{High voltage bias GUI. \label{fig:svtBias}}
 \end{figure}
 
-
-
-
-\end{itemize}
-
-
-
-
-
-
 \section{SVT Cooling}
 
-\begin{figure*}[t]
+\begin{figure*}[h!b]
 	\begin{center}
 		\includegraphics[width=0.5\textwidth]{svt_plc.png}
 		\caption{SVT PLC GUI, accessed through the \textbf{Devices} menu in \textbf{hps\_epics}.}
@@ -449,17 +438,17 @@ Below is a description of each of the GUI's in the list.
 	\end{center}
 \end{figure*}
 
-\begin{figure*}[t]
+\begin{figure*}[h!t]
 	\begin{center}
-		\includegraphics[width=0.5\textwidth]{svt_softinterlocks.png}
+		\includegraphics[width=0.4\textwidth]{svt_softinterlocks.png}
 		\caption{SVT software interlocks GUI, accessed through the \textbf{Devices} menu in \textbf{hps\_epics}.}
 		\label{fig:ctrl_cooling_softinterlocks}
 	\end{center}
 \end{figure*}
 
-\begin{figure*}[t]
+\begin{figure*}[h!b]
 	\begin{center}
-		\includegraphics[width=0.5\textwidth]{figures/svt_svtChiller.png}
+		\includegraphics[width=4cm]{figures/svt_svtChiller.png}
 		\caption{SVT chiller GUI, accessed through the \textbf{Devices} menu in \textbf{hps\_epics}.}
 		\label{fig:ctrl_cooling_svtchiller}
 	\end{center}
@@ -467,7 +456,7 @@ Below is a description of each of the GUI's in the list.
 
 \begin{figure*}[t]
 	\begin{center}
-		\includegraphics[width=0.5\textwidth]{figures/svt_febChiller.png}
+		\includegraphics[width=0.3\textwidth]{figures/svt_febChiller.png}
 		\caption{FEB chiller GUI, accessed through the \textbf{Devices} menu in \textbf{hps\_epics}.}
 		\label{fig:ctrl_cooling_febchiller}
 	\end{center}
@@ -479,6 +468,14 @@ The SVT movers are controlled using the SVT positioner GUI.
 The GUI controls the top and bottom halves of the SVT separately.
 For each half, the GUI shows the position in four ways: stage position, wire-to-beam distance, layer-1-to-beam distance, and angle. Except for the stage position (0 at home, positve as the stage moves in), these are signed values (positive above the beamline, negative under it).
 
+\begin{figure}[h!t!]
+\centering
+\includegraphics[width=8cm]{svt_movers.png}
+\caption{SVT positioner GUI, accessed through the \textbf{Motors} menu in \textbf{hps\_epics}.}
+\label{mover}
+\end{figure}
+
+
 The \textbf{Retract Stage} button moves the stage to 0.000 (all the way out).
 The button is disabled (red border) if this half of the SVT is already all the way out.
 
@@ -488,12 +485,6 @@ There is a software limit (a minimum layer-1 distance) to prevent unsafe operati
 
 \emph{Sometimes there is no response to an input in the text box. If this happens, one workaround is to open the motor expert GUI (click the \textbf{Expert Screens} button), and enter a value in either \textbf{MoveAbs} field. This seems to kick the motor control out of whatever bad state it gets stuck in.}
 
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=10cm]{svt_movers.png}
-\caption{SVT positioner GUI, accessed through the \textbf{Motors} menu in \textbf{hps\_epics}.}
-\label{mover}
-\end{figure}
 
 \input{svt_online_monitoring.tex}
 
@@ -556,10 +547,6 @@ Be ready to report what alarm has gone off.
 \end{verbatim}
 
 More information about the alarm handler can be found in the slow control manual. 
-
-
-
-
 
 
 \section{Voltages}
