@@ -89,6 +89,12 @@ SVT Flange boards and SVT Front end boards (FEBs) are powered with currents as s
 {\bf IF ON:} check that currents are updating: if not, try to reboot the "iochvCaen" IOC.
 \newline
 {\bf IF OFF:} restart the FEBs turning on in the order: {\bf DIG, ANAP and then ANAN}. Then power all the flange channels. Go to the "svtDpmLinkStatus" GUI and check that the FEB link errors are not incrementing. If they do, try to cycle the flange board power (wait 10-20s between cycles). You may need up to 4 cycles.
+\item 
+SVT Hybrids are powered (all indicators green) and currents updating regularly.
+\item 
+Bias high voltage is ON and at 180V (unless SVT expert has told you something different). 
+{\bf \textcolor{red}{Important: Check that beam conditions for turning on bias voltage is OK before swiching on (see above)!}}
+
 \item
 SVT DAQ is in a state ready to run:
 \begin{enumerate}
@@ -108,7 +114,7 @@ In \texttt{svtDpmStatus} GUI": check that all DPMs are in the appropriate CODA R
 \item
 Go to the \texttt{RunControl} GUI: click \texttt{connect}, a new GUI window opens.
 \item
-Click on \texttt{DAQ Configuration} and choose the \texttt{HPS} configuration. Click OK.
+Click on \texttt{DAQ Configuration} and choose the configuration that has been explained to you: either on the run plan wiki or on the whiteboard. Click OK.
 \item
 Check that run number, data filename and run configuration filename shown on \texttt{RunControl} GUI are correct. The "download" button should appear. 
 \item
@@ -171,9 +177,31 @@ Check that the \texttt{TrigCount} and \texttt{EventCount} variables for DPMs and
 \end{enumerate}
 \end{enumerate}
 
+
+\subsection{Beam trips: actions and recovery for DAQ}
+Beam trips are frequent and in the most normal case the SVT high voltage bias will trip and will need to be restored before continuing.  If a beam trips happen:
+\begin{enumerate}
+\item Stop the run 
+\item If the SVT is operating in a safe or fully retracted position follow these instructions. 
+
+\textcolor{red}{If not, consult run coordinator for instructions on if the SVT position in these cases.}
+\item When beam is back and we are ready go to the \texttt{softInterLocks} GUI under \texttt{Devices} on the HPS GUI. Reset the interlock for the SVT high voltage bias in the bottom right corner.
+\item Go to the SVT high voltage GUI and ramp up voltages. 
+
+\textcolor{red}{Make sure beam conditions and SVT positions are OK (see above) before ramping up high voltage}.
+
+\item Go back to CODA \texttt{run\_control} and continue the run (see above).
+
+\end{enumerate}
+
+
+
+
 \subsection{Stopping and restarting the DAQ}
 
-\subsubsection{Stopping and restarting CODA DAQ a.k.a. \texttt{FIX DAQ}}
+
+
+\subsubsection{\texttt{FIX DAQ}: stopping and restarting CODA}
 
 If DAQ problems occur and restarting the run do not work all DAQ processes can be restarted by typing:
 \begin{enumerate}
@@ -201,6 +229,7 @@ Type command \texttt{roc\_reboot crate\_id} in the same terminal where \texttt{c
 
 
 \subsubsection{SVT DAQ}
+In case you suspect that the SVT DAQ has crashed and it cannot be recovered in the \texttt{FIX DAQ} section above you can restart the SVT DAQ following these instructions. 
 
 {\bf \textcolor{red}{These are expert tasks. Don't do this unless you know what you are doing or the SVT expert helps you.}}\newline
 
