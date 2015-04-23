@@ -24,6 +24,8 @@
 
 \maketitle
 
+\tableofcontents
+
 \section{System Description}
 The HPS experiment data acquisition (DAQ) handles the acquisition of data for the two sub-detectors: the SVT,  and the ECal. HPS employs two DAQ architectures: the SVT is readout with Advanced Telecom Communications Architecture (ATCA) hardware while the ECal use VXS based hardware. The trigger system receives input from the ECal, and distributes a trigger signal to all detector subsystems to read out a selected event. Figure~\ref{fig:daq} gives a schematic block diagram of the DAQ system.
 
@@ -93,28 +95,38 @@ SVT Checklist
 \item
 SVT position is appropriate for the run. {\bf Check with shift leader if not sure.}
 \item 
-SVT Flange boards and SVT Front end boards (FEBs) are powered with currents as specified. 
+SVT Flange boards (\texttt{SVT/Flange} GUI) and SVT Front end boards (\texttt{/SVT/FEB Main} GUI) are powered  with no alarms. 
 \newline
 {\bf IF ON:} check that currents are updating: if not, try to reboot the "iochvCaen" IOC.
 \newline
-{\bf IF OFF:} restart the FEBs turning on in the order: {\bf DIG, ANAP and then ANAN}. Then power all the flange channels. Go to the "svtDpmLinkStatus" GUI and check that the FEB link errors are not incrementing. If they do, try to cycle the flange board power (wait 10-20s between cycles). You may need up to 4 cycles.
+{\bf IF OFF:} 
+\begin{enumerate}
 \item 
-SVT Hybrids are powered (all indicators green) and currents updating regularly.
+Restart the FEBs turning on in the order: 1) 'DIGI', 2) 'ANAP' and then 3) 'ANAN'; buttons are at the top of the \texttt{/SVT/FEB Main} GUI.
+\item
+Power all the flange channels from   \texttt{SVT/Flange}  GUI. 
+\item 
+Go to the \texttt{/SVT/Link Status} GUI and check that no FEB link errors are stably incrementing. If they do, try to cycle the flange board power (wait 10-20s between cycles). You may need up to 4 cycles.
+\end{enumerate}
 \item 
 Bias high voltage is ON and at 180V (unless SVT expert has told you something different). 
-{\bf \textcolor{red}{Important: Check that beam conditions for turning on bias voltage is OK before swiching on (see above)!}}
+\newline If the the HV is OFF and won't come on you might need to go and reset the interlock by going to the \texttt{Devices/SVT Soft Interlocks} GUI and Reseting the MPOD interlock. This happens after a beam trip. 
+\newline {\bf \textcolor{red}{Important: Check that beam conditions for turning on bias voltage is OK before swiching on (see above)!}}
 
 \item
 SVT DAQ is in a state ready to run:
 \begin{enumerate}
 \item
-Check that all the DPM and DTMs in \texttt{svtDaqIOCStatus} GUI are OK.
+Check that all the Control and Data DPMs and DTMs in \texttt{SVT/DAQ IOC Status} GUI are OK. 
+\newline NOTE1: If there was a reboot of the SVT DAQ software or COB (see below) the data DPMs might not show green until after the 'Download' transition. 
+\newline NOTE2:The control DPM should be OK as soon as a single FEB (and flanges are powered). It might take up to 30s for it to become green.
+
 \item
-Check that error counts in the "svtDpmLinkStatus" GUI are zero and not updating.
+Check that error counts in the \texttt{SVT/svtDpmLinkStatus} GUI are zero and not updating.
+
 \item
-In \texttt{svtDpmStatus} GUI: check that all DPMs are in "Ready" or "Unconfigured" state.
-\item
-In \texttt{svtDpmStatus} GUI": check that all DPMs are in the appropriate CODA Runstate. This may be different if the DAQ was stopped from a previous run (e.g. in "End") or this is starting from scratch.
+In \texttt{/SVT/DPM Status} GUI": check that all data DPMs are in the appropriate CODA Run state e.g. if you are in 'Download' all should be in that state, etc. 
+\newline NOTE: This may be not updated if there was a DAQ restart, e.g. the DPMs might be in 'End' as they doesn't know that CODA was restarted until 'Download' is initiated.
 \end{enumerate}
 \end{enumerate}
 
@@ -123,7 +135,7 @@ In \texttt{svtDpmStatus} GUI": check that all DPMs are in the appropriate CODA R
 \item
 Go to the \texttt{RunControl} GUI: click \texttt{connect}, a new GUI window opens.
 \item
-Click on \texttt{DAQ Configuration} and choose the configuration that has been explained to you: either on the run plan wiki or on the whiteboard. Click OK.
+Click on \texttt{DAQ Configuration}, choose 'HPS' and choose the configuration that has been explained to you: either on the run plan wiki or on the whiteboard. Click OK.
 \item
 Check that run number, data filename and run configuration filename shown on \texttt{RunControl} GUI are correct. The "download" button should appear. 
 \item
@@ -133,7 +145,7 @@ Press \texttt{Download}.
 \item
 Wait until the "Prestart" button appears and  \texttt{RunControl} GUI reports that Download was completed. This might takes up to 30s to complete. 
 \item
-Go to the \texttt{svtDpmRunState} GUI and check that all DPM's are in "Download" state. \
+Go to the \texttt{/SVT/svtDpmRunState} GUI and check that all DPM's are in "Download" state. \
 \item
 When \texttt{Prestart} button shows up the DAQ is ready to take data. 
 \end{enumerate}
@@ -142,9 +154,9 @@ When \texttt{Prestart} button shows up the DAQ is ready to take data.
 Press \texttt{Prestart} and wait between 5 and 10s and no errors are reported. 
 \begin{enumerate}
 \item
-Go to the \texttt{svtDpmRunState} GUI and check that all DPM's are in "Prestart" state. 
+Go to the \texttt{/SVT/svtDpmRunState} GUI and check that all DPM's are in "Prestart" state. 
 \item
-Go to the \texttt{svtHybSync} GUI and check that all hybrids are in "sync" i.e. the \texttt{SyncDetected} variable should be \texttt{0x1f} and indicator should be \textcolor{green}{green} for all hybrids.
+Go to the \texttt{/SVT/Hybrid Sync} GUI and check that all hybrids are in "sync" i.e. the \texttt{SyncDetected} variable should be \texttt{0x1f} and indicator should be \textcolor{green}{green} for all hybrids.
 \end{enumerate}
 \item
 Press \texttt{Go} to start the run. 
@@ -176,7 +188,7 @@ Go to the \texttt{RunControl}  GUI and press \texttt{End Run} to stop data takin
 End of run SVT DAQ checklist:
 \begin{enumerate}
 \item
-Go to the \texttt{svtDpmRunState} GUI and:
+Go to the \texttt{/SVT/svtDpmRunState} GUI and:
 \begin{enumerate}
 \item
 Check that the CODA run state is  \texttt{Stopped} for all DPMs and DTMs.
@@ -213,9 +225,15 @@ Try this if you get an error during download:
     \item In run control GUI: {\em Cancel}
     \item {\em Download} again
     \item If that still fails, repeat {\em Cancel} and {\em Download} once.
-    \item If still fails, GOTO Section \ref{fixdaqbig}.
+    \item If still fails, look at the run control GUI and try to determine which part of the system has a problem:
+    \begin{enumerate}
+    	\item If any of the 'dpm' or 'dtm' has problem this means the SVT DAQ is in a bad state: GOTO Section~\ref{fixsvtdaq}, else
+    	\item GOTO Section \ref{fixdaqbig}.
+    \end{enumerate}
     \item GOTO Step \#9 in Section \ref{sec:startstop}.
 \end{enumerate}
+
+
 \subsubsection{Full DAQ Teardown and ROC Reboots and Restart}\label{fixdaqbig}
 If DAQ still doesn't work, try this before calling in the expert in the middle of the night.
 \begin{enumerate}
@@ -263,31 +281,43 @@ Otherwise, here is a list of the CODA commands to be run on each ROC.  These sho
 \end{itemize}
 
 
+\subsubsection{FIX SVT DAQ}
+\label{fixsvtdaq}
 
-\newpage
-\subsection{SVT DAQ}
-In case you suspect that the SVT DAQ has crashed and it cannot be recovered in the \texttt{FIX DAQ} section above you can restart the SVT DAQ following these instructions. 
+Before following the below procedure please record in a log entry what the status:
+\begin{itemize}
+\item What is the status of CODA: Did any of the ECAL ROCs crash? Did the EB, ET or ER crash? 
+\item When did it fail: In state transition  'Download',  'Prestart'  or 'Go' or during a run?
+\item What is the status of the ROCs (There are 15 DPMs and 2 DTMs): did they crash or report any error message?
+\item Open the \texttt{/SVT/DAQ IOC Status} GUI and write down the status: which ones are red/green?
+\item If this happened during Open the \texttt{/SVT/Hybrid Sync} GUI and write down if the status: which ones are red/green?
 
-{\bf \textcolor{red}{These are expert tasks. Don't do this unless you know what you are doing or the SVT expert helps you.}}\newline
+\end{itemize}
 
-{\bf "Rebooting the COBs"} \newline
-Open a terminal on \texttt{clondaq5}. \newline
-\texttt{> cd $\$$CLAS/slac\_svt/svtdaq/daq/rceScripts} \newline
-\texttt{>./reboot\_cobs} \newline
+To try and resolve the SVT DAQ state try to follow these instructions.
 
-Issue a ping to one of the DAQ hosts in a terminal (e.g. \texttt{ping dtm0}) and wait until it responds \newline
+\begin{enumerate}
+    \item If one or many of the DPMs failed to or prestart
+	\begin{enumerate}
+    		\item Reboot the software by login into  \texttt{clondaq5} as 'clasrun'. \newline
+		\texttt{> cd $\$$CLAS/slac\_svt/svtdaq/daq/rceScripts} \newline
+		\texttt{> ./rem\_restart} \newline
+		You will see the script connecting to each host. Wait until finished, can be up to 20s. \newline
+		Wait until you can ping host 'dtm0' \newline
+		Open the \texttt{/SVT/DAQ IOC Status} GUI and verify that the control DPMs are green; it may take up to 30s (the FEBs need to be powered).
+		\item Go back to the run control GUI and repeat the 'Download' step (may need to 'Cancel' and 'Reset' first)
+		\item If one or many DPMs are still having issues then reboot the "COB"  by login into  \texttt{clondaq5} as 'clasrun'. \newline
+		\texttt{> cd $\$$CLAS/slac\_svt/svtdaq/daq/rceScripts} \newline
+		\texttt{> ./reboot\_cob} \newline
+		Wait at least 10s. \newline
+		Make sure you can ping host 'dtm0' \newline
+		Open the \texttt{/SVT/DAQ IOC Status} GUI and verify that the control DPMs are green; it may take up to 30s (the FEBs need to be powered). The data DPMs might be red until you go past to 'Download'.
+		
+ 	\end{enumerate}
+\end{enumerate}
 
-Check if the reboot was successful by going to the \texttt{svtDaqIOCStatus} GUI and see that all nodes are coming back with OK status. This may take up to 30s. 
-
-{\bf "Restart the DAQ software"} \newline
-Open a terminal on \texttt{clondaq5}. \newline
-\texttt{> cd $\$$CLAS/slac\_svt/svtdaq/daq/rceScripts} \newline
-\texttt{> ./rem\_restart} \newline
-You will see the script connecting to each host. Wait until finished, can be up to 20s. \newline
-
-Check if the reboot was successful by going to the \texttt{svtDaqIOCStatus} GUI and see that all nodes are coming back with OK status. This may take up to 30s. 
-
-
+    
+   
 
 
 
