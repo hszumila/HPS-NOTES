@@ -743,7 +743,37 @@ Wait 20 minutes for temperatures to equalize in the system (chiller temperature 
 Be sure to cap the connection not being purged using a VCR cap and a used gasket. 
 \end{enumerate}
 
-\subsection{Filling SVT chiller (experts only)}
+\subsection{Filling SVT chiller from empty (experts only)}
+\begin{enumerate}
+\item Disable the PLC interlocks for flow, supply RTD, and return RTD.
+\item Follow the instructions in the chiller manual to fill the chiller. Use the metal funnel.
+\item If the final level of the chiller is below 1/4, add a full jug of HFE 7000.
+\end{enumerate}
+
+\subsection{Adding fluid to SVT chiller}
+The HFE-7000 fluid for the SVT cooling loop evaporates steadily and must be replenished approximately once every 3 weeks.
+The fluid is supplied in 10-pound jugs. It is nontoxic and evaporates rapidly.
+The chiller should be refilled when it reaches level 2 (slightly below 1/4); one jug will take it to level 7 (slightly above 3/4).
+Refilling before the level drops to level 2 will cause a high level warning; waiting until the level drops to level 1 will cause a low level warning.
+
+\begin{enumerate}
+\item Disable the PLC and software interlocks for supply RTD and return RTD.
+\item Using a funnel, pour a jug of HFE-7000 into the fill port at the top of the chiller. If this causes a high level warning, acknowledge it.
+\item Once temperatures have stabilized, enable all interlocks that were bypassed.
+\item Make a logbook entry noting the chiller level before and after the fill.
+\end{enumerate}
+
+\begin{figure}
+\includegraphics[angle=90,width=6cm]{figures/chiller_level1}
+\includegraphics[angle=90,width=6cm]{figures/chiller_level2}
+\includegraphics[angle=90,width=6cm]{figures/chiller_level3}
+\includegraphics[angle=90,width=6cm]{figures/chiller_level4}
+\includegraphics[angle=90,width=6cm]{figures/chiller_level5}
+\includegraphics[angle=90,width=6cm]{figures/chiller_level6}
+\includegraphics[angle=90,width=6cm]{figures/chiller_level7}
+\caption{Steps of the SVT chiller level indicator. Level 1 (first image) is the lowest level at which the chiller will continue to run, with a low level warning alarm. Levels 2--7 are levels for normal operation. Level 8 (not shown) will cause a high level warning alarm, but the chiller will continue to run. \label{fig:svt_chiller_level}}
+\end{figure}
+
 \begin{enumerate}
 \item Disable the PLC interlocks for flow, supply RTD, and return RTD.
 \item Follow the instructions in the chiller manual to fill the chiller. Use the metal funnel.
