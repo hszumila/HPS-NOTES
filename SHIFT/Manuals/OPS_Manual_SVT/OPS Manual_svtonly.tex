@@ -761,12 +761,6 @@ Refilling before the level drops to level 2 will cause a high level warning; wai
 \caption{Steps of the SVT chiller level indicator. Level 1 (first image) is the lowest level at which the chiller will continue to run, with a low level warning alarm. Levels 2--7 are levels for normal operation. Level 8 (not shown) will cause a high level warning alarm, but the chiller will continue to run. \label{fig:svt_chiller_level}}
 \end{figure}
 
-\begin{enumerate}
-\item Disable the PLC interlocks for flow, supply RTD, and return RTD.
-\item Follow the instructions in the chiller manual to fill the chiller. Use the metal funnel.
-\item If the final level of the chiller is below 1/4, add a full jug of HFE 7000.
-\end{enumerate}
-
 \subsection{Response to unexpected HV loss}
 \label{sec:proc_cooling_HVloss}
 If the beam software interlock is enabled, and the beam is off, EPICS will turn off all HV channels.
