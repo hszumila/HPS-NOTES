@@ -220,13 +220,19 @@ An automatic log entry in the Hall B logbook will also be made, with the Sequenc
 {\bf {\it TODO: print a reference map and aks the user to compare with that}}
 
 \subsection{Quick 2-Minute LED Run for Simple Channel Status Check}
-This just counts threshold crossings in the discriminators, which is sufficient for checking that all channels are alive with LEDs.  This full test of all 442 channels requires only 2 minutes, requires no changes to the DAQ configuration, and is completetely independent of the hps-java monitoring app.
+This just counts threshold crossings in the discriminators, which is sufficient for checking that all channels are alive with LEDs.  This full test of all 442 channels requires only 2 minutes, requires no changes to the DAQ configuration, and is completetely independent of the hps-java monitoring app.  If all LEDs and all channels are working, the result should be similar to Figure~\ref{fig:quickledscanresult}
 
   \begin{enumerate}
       \item With a quiet detector, execute the command \texttt{runEcalLedTest.sh}.  This will open a gui showing accumulated scaler rates in all 442 ECal channels.  
       \item Start a ``LessFast'' LED sequence.
       \item Check that all channels are uniformly populated to within a factor of 2 after the sequence is finished.
   \end{enumerate}
+
+  \begin{figure}[htbp]\centering
+      \includegraphics[width=14cm]{pics/ledScanBlue_2015_04_17_10-45-53.png}
+      \caption{The accumulated discriminator counts after a successfull ``Quick 2-Minute LED Run''.  The absolulte counts will depend on LED pulser rate and duration, but the important aspect is uniformity from channel to channel.  \label{fig:quickledscanresult}}
+  \end{figure}
+
 
    \section{Making a cosmic calibration run}
 
@@ -295,6 +301,8 @@ The FADC crates and calorimeter signal splitters occupy the rack furthest from t
 
    {\noindent\footnotesize\url{http://www.nist.gov/ncnr/upload/Circulating-Bath\_Thermo-Scientific\_NESLAB-RTE-7.pdf}}
      \subsection{Rebooting the Chiller After Power Failure}
+     {\em This section applies to the old chiller that was replaced in April 2015.}
+
      If the chiller loses power while in local mode, the ``power'' button must be pressed manually to restart it after power is restored.  In case it loses power while in remote mode, a procedure is necessary to reset it after power is restored:
    {\footnotesize
      \begin{enumerate}
@@ -415,10 +423,6 @@ The product should be a plot like figure~\ref{HVhistory}.
 \caption{\small \label{HVhistory} Expert HV current history.}
 \end{figure}
 
-   \section{Disconnection of a Channel and Preamplifier Replacement}
-     
-      In last resort, to recover a HV group that is tripping one can disconnect the faulty channel causing trouble. To do so, you need to find exactly which channel is involved! It might be obvious from data, if the channel was already very noisy, else you will have to test the channels of the group one by one. This is a lengthy operation and should only be attempted with the authorization of the run coordinator and in coordination with the ECal Group. It necessitates that the Hall-B crew moves the ECal out of the beam line and to open it.
-
 \section{Channel Mapping GUI}
 Channel mapping is available in a spreadsheet in the annex pdf on the run wiki. It is also available in a GUI, and a script to run it is in \texttt{/home/hpsrun/scripts} on the clon machines.  To run it just enter in a terminal on one of the \texttt{clonpcN} machines:
 {\center{\texttt{kylesGui.sh}}}\newline\newline
@@ -428,6 +432,27 @@ Hover over a crystal with the mouse to see all its channel numberings in the tab
     \includegraphics[width=16cm]{pics/kylesGui.png}
     \caption{The ECal event display can be used to get channel mappings.  The blue highlighted channel's mappings are shown in the table.\label{fig:kylesGui}}
 \end{figure}
+
+\section{Opening the Calorimeter}
+
+This requires 2 people.  Care must be taken for all cabling during this process, including LV, HV, signal, and thermocouples.  The required tools are shown in Table ~\ref{tab:tools}.  The wenches and metric crescent wrenches should be in the HPS cabinet on the pie tower.  The rest should be retrieved from the toolboxes on the Hall-B floor.  While one can get by with only half the number of wrenches of each type, it is fastest to have the full list. 
+
+\begin{table}[htbp]\centering
+    \begin{tabular}{c|l}\hline
+        Count & Type \\\hline
+4&   ECAL-ONLY wenches\\
+4&   15/16" crescent wrenches for rod bolts\\
+2&   11 mm crescent wrenches for lateral cossbar supports (over beampipe)\\
+2&   6 mm hex/allen wrenches for longitudinal crossbar supports (on far left/right)\\
+2&   3/16" hex/allen wrenches for support plates\\
+2&   medium-sized flathead screwdrivers\\\hline
+    \end{tabular}
+    \caption{Items used to open the calorimeter. \label{tab:tools}}
+\end{table}
+
+   \section{Disconnection of a Channel and Preamplifier Replacement}
+     
+      In last resort, to recover a HV group that is tripping one can disconnect the faulty channel causing trouble. To do so, you need to find exactly which channel is involved! It might be obvious from data, if the channel was already very noisy, else you will have to test the channels of the group one by one. This is a lengthy operation and should only be attempted with the authorization of the run coordinator and in coordination with the ECal Group. It necessitates that the Hall-B crew moves the ECal out of the beam line and to open it.
 
    \section{LED system for experts}
 
