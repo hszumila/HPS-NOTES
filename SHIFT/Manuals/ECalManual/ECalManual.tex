@@ -7,7 +7,7 @@
 \makeatother
 
 
-\title{Manual for HPS ECal v1.7}
+\title{Manual for HPS ECal v1.8}
 
 \author{ECal On-Call Cell Phone: 757-810-1489 \\ 
 Authors: \\
@@ -180,9 +180,6 @@ Shift takers are requested to operate the system in ``Sequence mode'' only. To d
 \subsection{Automatic LED Monitoring}
 A monitoring app is setup to record all channels successfully registered during an LED run.  It should be started before the LED sequence is started and viewed afterwards, with the command: \begin{center}\$HOME/hps\_software/scripts/startECalLEDSequenceMonitoring.csh\end{center} Make sure to use the hpsrun account before using this command.
   
-  {\bf\it ? TODO: Make pedestal viewer app accessible from EPICS gui, and make it save ped files to an absolute path.}
-
-    
 \subsection{Taking an LED sequence run}
 The following instructions must be followed to take an LED sequence run. This involves setting the DAQ, starting the LED sequence run, and configure the hps-java monitoring app to monitor the data. At the end of the run, the user can upload the relevant information to the hps conditions database, as well as post a log-entry to the HallB electronic logbook.
 
@@ -236,15 +233,14 @@ This just counts threshold crossings in the discriminators, which is sufficient 
 
    \section{Making a cosmic calibration run}
 
-   In addition to the calorimeter, the cosmic PMTs should be powered on.  Their HV control is under ``beam'' in the main EPICS gui's HV section.  They are named \texttt{ECal\_cosm1} and \texttt{ECal\_cosm2} and their voltages should be set at 1650 V.  The DAQ configuration should be set to \begin{center}\texttt{hps\_cosmic\_mode1\_thresh0.cfg}\end{center}  It takes at least one full day of data to acquire sufficient statistics for a cosmic calibration.
+   In addition to the calorimeter, the cosmic PMTs should be powered on.  Their HV control is under ``Beav HV'' in the main EPICS gui's HV section.  They are named \texttt{ECal\_cosm1} and \texttt{ECal\_cosm2} and their voltages should be set at 1650 V.  The DAQ configuration should be set to \begin{center}\texttt{hps\_cosmic.trg}\end{center}  It takes at least one full day of data to acquire sufficient statistics for a cosmic calibration.
 
    \section{Taking a Pedestal Run}
 
-   Pedestals are calculated at running luminosity with DAQ configuration \begin{center}\texttt{hps\_ecal\_pedestal\_mode7\_thresh50.cfg}\end{center} and monitored and analyzed with HPS's hps-java monitoring app via the command:
-   \begin{center}\$HOME/scripts/ECalCalculatePedestals.sh\end{center}
-Once the user deems the statistics sufficient in the monitoring plots, the app should be disconnected from the ET-ring and then output will be files \texttt{fadc37.ped} and \texttt{fadc39.ped} in the current working directory.  An expert should place them in the proper location for the DAQ to read.
+   Pedestals are calculated at running luminosity with DAQ configuration \begin{center}\texttt{ecalPedestal.trg}\end{center} and monitored and analyzed with HPS's hps-java monitoring app via the command:
+       \begin{center}\texttt{startEcalPedestalCalculator}\end{center}
+       In this monitoring app you can click on the event display to view the different channels' pedestal histograms as the data is acquired.  Once the statistics are sufficient, the app should be disconnected from the ET-ring and then output files for the DAQ and database will be generated in the directory:\begin{center}\texttt{\$HOME/EcalPedestals}\end{center}  The user will be asked if they want them put in the database automatically, and it requires two consecutive ``YES'' responses to make it happen.  An expert should make the trigger configuration use the new pedestal file.
 
-{\bf\it ? TODO: Make pedestal viewer app accessible from EPICS gui, and make it save ped files to an absolute path.}
 
       \section{Scalers}
 
