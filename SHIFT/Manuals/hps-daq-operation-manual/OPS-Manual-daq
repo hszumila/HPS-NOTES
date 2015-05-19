@@ -280,12 +280,12 @@ If the ROC was not rebooted and only the CODA command died, the command should b
 Otherwise, here is a list of the CODA commands to be run on each ROC.  These should be executed in a terminal that is logged into the appropriate ROC (\texttt{hps1, hps2, hps11, hps12, hps1gtp,or hps2gtp}) as user \texttt{clasrun}.
 
 \begin{itemize}
-    \item{\texttt prxt\_linux\_ts.tcl hps11}
-    \item{\texttt prxt\_linux\_gef.tcl hps1}
-    \item{\texttt prxt\_linux\_gef.tcl hps2}
-    \item{\texttt prxt\_linux\_gef.tcl hps12}
-    \item{\texttt prxt\_linux.tcl hps1gtp}
-    \item{\texttt prxt\_linux.tcl hps2gtp}
+    \item \texttt {coda\_roc\_gef -s clashps -o $''$hps11 TS$''$}
+    \item \texttt {coda\_roc\_gef -s clashps -o $''$hps12 ROC$''$}
+    \item \texttt {coda\_roc\_gef -s clashps -o $''$hps1 ROC$''$}
+    \item \texttt {coda\_roc\_gef -s clashps -o $''$hps2 ROC$''$}
+    \item \texttt {coda\_roc -s clashps -o $''$hps1gtp ROC$''$}
+    \item \texttt {coda\_roc -s clashps -o $''$hps2gtp ROC$''$}
 \end{itemize}
 
 \subsubsection{Debugging deadtime}
